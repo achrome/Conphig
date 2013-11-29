@@ -2,7 +2,7 @@
 
 It's a simple configuration generator that parses different types of configuration files into an object
 
-Currently the only supported file type is INI
+Currently the only supported file types are INI, XML and JSON
 
 ### Usage
 
