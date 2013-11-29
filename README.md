@@ -53,6 +53,8 @@ or even better, by extending `Conphig\Configurators\AbstractConfigurator` like t
 ```php
 namespace Foo;
 
+use Conphig\Configurators\AbstractConfigurator;
+
 class BarConfigurator extends AbstractConfigurator {
 
 	public function parseConfig() {
