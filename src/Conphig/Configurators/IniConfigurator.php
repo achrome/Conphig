@@ -8,7 +8,6 @@ class IniConfigurator extends AbstractConfigurator {
 	public function parseConfig() {
 		$this->intermediateConf = parse_ini_file($this->filePath, true);
 		$this->configuration = $this->recursivelyCreateConfig($this->intermediateConf);
-		return $this->configuration;
 	}
 	
 	private function recursivelyCreateConfig($confArray) {

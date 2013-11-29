@@ -25,4 +25,8 @@ abstract class AbstractConfigurator implements Configurable {
 		$this->filePath = $filePath;
 	}
 	
+	public function getConfiguration() {
+		return $this->configuration;
+	}
+	
 }

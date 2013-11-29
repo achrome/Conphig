@@ -81,7 +81,7 @@ class ConfigurationFactory {
 		}
 		$reflectionClass = new ReflectionClass($this->supportedTypes[$this->configType]);
 		$configurator = $reflectionClass->newInstanceArgs(array($filePath));
-		$configuration = $configurator->parseConfig();
-		return $configuration;
+		$configurator->parseConfig();
+		return $configurator->getConfiguration();
 	}
 }

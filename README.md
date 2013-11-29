@@ -59,7 +59,6 @@ class BarConfigurator extends AbstractConfigurator {
 
 	public function parseConfig() {
 		//The file name is saved in AbstractConfigurator::filePath and can be used here to write your own logic to parse the file.
-		return $this->configuration; //This line is needed for the factory to return the configuration object
 	}
 }
 ```
