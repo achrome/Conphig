@@ -10,8 +10,10 @@ In the application bootstrap, `require 'Conphig/autoload.php'` to set up the aut
 `require 'vendor/autoload.php'`
 
 ```php
-$configuration = Conphig\Factories\ConfigurationFactory::getInstance()
-					->setConfigPath('/path/to/your/config/dir')
+use Conphig\Factories\ConfigurationFactory;
+
+$configCreator = new ConfigurationFactory();
+$configuration = $configCreator->setConfigPath('/path/to/your/config/dir')
 					->setConfigFileName('configFileName')
 					->setConfigType('filetype')
 					->create();
@@ -22,8 +24,10 @@ By default, it will take the file name `config` and type `ini`, so the only thin
 If this is the case, you could just do this.
 
 ```php
-$configuration = Conphig\Factories\ConfigurationFactory::getInstance('/path/to/config/dir')
-					->create();
+use Conphig\Factories\ConfigurationFactory;
+
+$configCreator = new ConfigurationFactory('/path/to/config/dir')
+$configuration = $configCreator->create();
 ```
 
 For example, if a config.ini looks like this,
@@ -40,7 +44,10 @@ password = FooBar1234
 When parsed through Conphig
 
 ```php
-$configuration = ConfigurationFactory::getInstance('path/to/config/dir')->create();
+use Conphig\Factories\ConfigurationFactory;
+
+$configCreator = new ConfigurationFactory('/path/to/config/dir')
+$configuration = $configCreator->create();
 
 echo $configuration->database->engine; //Will output mysql
 ```
@@ -66,7 +73,8 @@ class BarConfigurator extends AbstractConfigurator {
 Then, you need to register the custom handler and it will be set as the configurator that will be used
 
 ```php
-$configuration = ConfigurationFactory::getInstance('/path/to/your/custom/config/dir')
-					->registerConfigHandler('custom', 'Foo\\BarConfigurator')
-					->create();
+use Conphig\Factories\ConfigurationFactory;
+
+$configCreator = new ConfigurationFactory('/path/to/custom/config/dir');
+$configuration = $configCreator->registerConfigHandler('custom', 'Foo\\BarConfigurator')->create();
 ```

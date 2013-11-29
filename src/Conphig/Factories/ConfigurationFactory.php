@@ -27,18 +27,8 @@ class ConfigurationFactory {
 	
 	private $configFileName = 'config';
 	
-	/**
-	 * 
-	 * @var ConfigurationFactory
-	 */
-	private static $_instance = null;
-	
-	private function __construct($configPath = '') {
+	public function __construct($configPath = '') {
 		$this->setConfigPath($configPath);
-	}
-	
-	public static function getInstance($configPath = '') {
-		return self::$_instance === null ? new self($configPath) : self::$_instance; 
 	}
 	
 	public function setConfigPath($configPath) {
