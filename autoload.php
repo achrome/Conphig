@@ -12,13 +12,17 @@
  */
 spl_autoload_register(function ($className) {
 	// Only load the class under the Conphig
-	if (strpos($className, 'Conphig\\') !== 0) return;
+	if (strpos($className, 'Conphig\\') !== 0) return false;
 	
 	// Compute the file path and make it OS agnostic
 	$className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
 	$fileName = __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . "$className.php";
 	
 	// Add a safety check to avoid unforeseen errors
-	if (file_exists($fileName)) require $fileName;
+	if (file_exists($fileName)) {
+		require $fileName;
+		return true;
+	}
+	return false;
 });
 
