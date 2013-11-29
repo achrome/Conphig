@@ -13,7 +13,7 @@ In the application bootstrap, `require 'Conphig/autoload.php'` to set up the aut
 use Conphig\Factories\ConfigurationFactory;
 
 $configCreator = new ConfigurationFactory();
-$configuration = $configCreator->setConfigPath('/path/to/your/config/dir')
+$configuration = $configCreator->setConfigPath('/path/to/config/dir')
 					->setConfigFileName('configFileName')
 					->setConfigType('filetype')
 					->create();
@@ -26,7 +26,7 @@ If this is the case, you could just do this.
 ```php
 use Conphig\Factories\ConfigurationFactory;
 
-$configCreator = new ConfigurationFactory('/path/to/config/dir')
+$configCreator = new ConfigurationFactory('/path/to/config/dir');
 $configuration = $configCreator->create();
 ```
 
@@ -46,7 +46,7 @@ When parsed through Conphig
 ```php
 use Conphig\Factories\ConfigurationFactory;
 
-$configCreator = new ConfigurationFactory('/path/to/config/dir')
+$configCreator = new ConfigurationFactory('/path/to/config/dir');
 $configuration = $configCreator->create();
 
 echo $configuration->database->engine; //Will output mysql
