@@ -3,18 +3,12 @@
 namespace Conphig\Configurators;
 
 use Conphig\Configuration\Configuration;
+use Conphig\Helpers\ConfiguratorHelper;
+
 class IniConfigurator extends AbstractConfigurator {
-	
+
 	public function parseConfig() {
 		$this->intermediateConf = parse_ini_file($this->filePath, true);
-		$this->configuration = $this->recursivelyCreateConfig($this->intermediateConf);
-	}
-	
-	private function recursivelyCreateConfig($confArray) {
-		$configuration = new Configuration;
-		foreach($confArray as $key => $value) {
-			$configuration->$key = is_array($value) ? $this->recursivelyCreateConfig($value) : $value;
-		}
-		return $configuration;
+		$this->configuration = (new ConfiguratorHelper())->createObjFromArray($this->intermediateConf);
 	}
 }
