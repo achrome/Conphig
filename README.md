@@ -1,4 +1,4 @@
-### Welcome to Conphig
+# Welcome to Conphig
 
 It's a simple configuration generator that parses different types of configuration files into an object
 
@@ -59,4 +59,12 @@ class BarConfigurator extends AbstractConfigurator {
 		return $this->configuration; //This line is needed for the factory to return the configuration object
 	}
 }
+```
+
+Then, you need to register the custom handler and it will be set as the configurator that will be used
+
+```
+$configuration = ConfigurationFactory::getInstance('/path/to/your/custom/config/file/')
+					->registerConfigHandler('custom', 'Foo\\BarConfigurator')
+					->create();
 ```

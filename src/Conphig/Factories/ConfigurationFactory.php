@@ -63,6 +63,7 @@ class ConfigurationFactory {
 			throw new ConfigurationException("Class $configClass not found. Please check that the class exists");
 		}
 		$this->supportedTypes[$configType] = $configClass;
+		$this->configType = $configType;
 		return $this;
 	}
 	
