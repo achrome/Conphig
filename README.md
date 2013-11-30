@@ -54,8 +54,7 @@ echo $configuration->database->engine; //Will output mysql
 
 ### Custom configurators
 
-You can register your own configuration system by implementing the `Conphig\Interfaces\Configurable` interface,
-or even better, by extending `Conphig\Configurators\AbstractConfigurator` like this
+You can register your own configuration system by extending `Conphig\Configurators\AbstractConfigurator` like this
 
 ```php
 namespace Foo;
@@ -66,6 +65,7 @@ class BarConfigurator extends AbstractConfigurator {
 
 	public function parseConfig() {
 		//The file name is saved in AbstractConfigurator::filePath and can be used here to write your own logic to parse the file.
+		//Save the configuration in AbstractConfigurator::configuration for the factory to be able to return it.
 	}
 }
 ```
