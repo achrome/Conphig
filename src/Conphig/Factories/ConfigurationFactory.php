@@ -88,21 +88,41 @@ class ConfigurationFactory {
 	 *
 	 * @return Configuration
 	 */
-	public function create() {
-		if ($this->configPath === '')
-			throw new ConfigurationException("The configuration path is not set");
+	public function create($fullPath = '') {
+		if ($fullPath !== '') {
+			$this->parseFullPath($fullPath);
+		}
+		if($this->configPath === '')
+			$this->configPath = getcwd();
 		
 		$filePath = $this->configPath . DIRECTORY_SEPARATOR . $this->configFileName . '.' . $this->configType;
 		if (!file_exists($filePath))
-			throw new ConfigurationException("Unable to find file: $filePath");
+			throw new ConfigurationException("Unable to find file at $filePath");
 		
-		if(!array_key_exists($this->configType, $this->supportedTypes))
+		if (!array_key_exists($this->configType, $this->supportedTypes))
 			throw new ConfigurationException("Invalid configuration type used");
-			
+		
 		$reflectionClass = new ReflectionClass($this->supportedTypes[$this->configType]);
 		$configurator = $reflectionClass->newInstanceArgs(array ($filePath, $this->configParams));
 		$configurator->parseConfig();
 		
 		return $configurator->getConfiguration();
+	}
+
+	private function parseFullPath($path) {
+		$tokens = preg_split('/\/|\\\/', $path);
+		$filename = $tokens[count($tokens) - 1];
+		
+		//Check whether the path terminates with a file name or not.
+		if(strpos($filename, '.') !== FALSE) {
+			list($name, $ext) = explode('.', $filename);
+			unset($tokens[count($tokens) - 1]);
+		}
+		
+		$this->configPath = implode(DIRECTORY_SEPARATOR, $tokens);
+		if(isset($name) && $name !== '' && isset($ext) && $ext !== NULL) {
+			$this->configFileName = $name;
+			$this->configType = $ext;
+		}
 	}
 }
