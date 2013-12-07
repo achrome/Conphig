@@ -109,7 +109,7 @@ class ConfigurationFactory {
 		return $configurator->getConfiguration();
 	}
 
-	private function parseFullPath($path) {
+	protected function parseFullPath($path) {
 		$tokens = preg_split('/\/|\\\/', $path);
 		$filename = $tokens[count($tokens) - 1];
 		
