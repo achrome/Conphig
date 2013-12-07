@@ -3,6 +3,14 @@ namespace Conphig\Configurators;
 
 use Conphig\Exceptions\ConfigurationException;
 use Conphig\Helpers\ConfiguratorHelper;
+
+/**
+ * 
+ * @author Ashwin Mukhija
+ * @license MIT
+ * @link https://github.com/Achrome/Conphig
+ *
+ */
 class JsonConfigurator extends AbstractConfigurator {
 	
 	public function parseConfig() {

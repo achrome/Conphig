@@ -6,6 +6,13 @@ use \InvalidArgumentException;
 use \ReflectionClass;
 use \Exception;
 
+/**
+ *
+ * @author Ashwin Mukhija
+ * @license MIT
+ * @link https://github.com/Achrome/Conphig
+ *
+ */
 class ConfiguratorHelper {
 
 	public function createObjFromArray($inArray, $objType = 'Conphig\\Configuration\\Configuration', $objArgs = []) {

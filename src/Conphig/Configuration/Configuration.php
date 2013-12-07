@@ -2,6 +2,11 @@
 
 namespace Conphig\Configuration;
 
+/**
+ * @author Ashwin Mukhija
+ * @license MIT
+ * @link https://github.com/Achrome/Conphig
+ */
 class Configuration {
 	
 	private $registry = [];

@@ -4,6 +4,13 @@ namespace Conphig\Configurators;
 
 use Conphig\Interfaces\Configurable;
 
+/**
+ * 
+ * @author Ashwin Mukhija
+ * @license MIT
+ * @link https://github.com/Achrome/Conphig
+ *
+ */
 abstract class AbstractConfigurator implements Configurable {
 
 	/**

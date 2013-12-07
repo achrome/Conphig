@@ -5,6 +5,13 @@ namespace Conphig\Configurators;
 use Conphig\Exceptions\ConfigurationException;
 use Conphig\Configuration\Configuration;
 
+/**
+ * 
+ * @author Ashwin Mukhija
+ * @license MIT
+ * @link https://github.com/Achrome/Conphig
+ *
+ */
 class XmlConfigurator extends AbstractConfigurator {
 
 	public function parseConfig() {
