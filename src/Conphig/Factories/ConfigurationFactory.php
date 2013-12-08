@@ -48,8 +48,9 @@ class ConfigurationFactory {
 	private $configParams = [ ];
 
 	public function __construct($configPath = '') {
-		if (!is_string($configPath))
+		if (!is_string($configPath)) {
 			throw new InvalidArgumentException("Invalid type given. Expected string, got " . gettype($configPath));
+		}
 		
 		$this->setConfigPath($configPath);
 	}
@@ -75,11 +76,13 @@ class ConfigurationFactory {
 	}
 
 	public function registerConfigHandler($configType, $configClass) {
-		if (!class_exists($configClass))
+		if (!class_exists($configClass)) {
 			throw new ConfigurationException("Class $configClass not found. Please check that the class exists");
+		}
 		
-		if (!is_a($configClass, 'Conphig\\Interfaces\\Configurable'))
+		if (!is_a($configClass, 'Conphig\\Interfaces\\Configurable')) {
 			throw new ConfigurationException("Class $configClass does not implement the Configurable interface");
+		}
 		
 		$this->supportedTypes[$configType] = $configClass;
 		$this->configType = $configType;
@@ -99,15 +102,18 @@ class ConfigurationFactory {
 		if ($fullPath !== '') {
 			$this->parseFullPath($fullPath);
 		}
-		if($this->configPath === '')
+		if($this->configPath === '') {
 			$this->configPath = getcwd();
+		}
 		
 		$filePath = $this->configPath . DIRECTORY_SEPARATOR . $this->configFileName . '.' . $this->configType;
-		if (!file_exists($filePath))
+		if (!file_exists($filePath)) {
 			throw new ConfigurationException("Unable to find file at $filePath");
+		}
 		
-		if (!array_key_exists($this->configType, $this->supportedTypes))
+		if (!array_key_exists($this->configType, $this->supportedTypes)) {
 			throw new ConfigurationException("Invalid configuration type used");
+		}
 		
 		$reflectionClass = new ReflectionClass($this->supportedTypes[$this->configType]);
 		$configurator = $reflectionClass->newInstanceArgs(array ($filePath, $this->configParams));
