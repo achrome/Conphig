@@ -15,11 +15,22 @@ In the application bootstrap, `require 'Conphig/autoload.php'` to set up the aut
 ```php
 use Conphig\Factories\ConfigurationFactory;
 
-$configCreator = new ConfigurationFactory();
+$configCreator = new ConfigurationFactory;
 $configuration = $configCreator->setConfigPath('/path/to/config/dir')
 					->setConfigFileName('configFileName')
 					->setConfigType('filetype')
 					->create();
+```
+
+Or, if you prefer to go through a simpler route
+
+```php
+
+use Conphig\Factories\ConfigurationFactory;
+
+$configCreator = new ConfigurationFactory;
+$configuration = $configCreator->create('/path/to/config/file.ext');
+
 ```
 
 By default, it will take the file name `config` and type `ini`, so the only thing it needs is the path.
