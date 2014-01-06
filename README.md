@@ -4,6 +4,8 @@ It's a simple configuration generator that parses different types of configurati
 
 Currently the only supported file types are INI, XML and JSON
 
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Achrome/Conphig/badges/quality-score.png?s=83ddcfbe88648c2859974477530b405e7c3e8b3e)](https://scrutinizer-ci.com/g/Achrome/Conphig/)
+
 ### Usage
 
 In the application bootstrap, `require 'Conphig/autoload.php'` to set up the autoloader, or if you are using Composer, just 
