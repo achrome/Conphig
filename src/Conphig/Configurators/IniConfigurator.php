@@ -20,7 +20,7 @@ class IniConfigurator extends AbstractConfigurator {
       throw new ConfigurationException( "Could not read the configuration file" );
     }
     
-    $this->configuration = (new ConfiguratorHelper)->createObjFromArray( 
+    $this->configuration = (new ConfiguratorHelper( ))->createObjFromArray( 
         $this->intermediateConf );
   }
 }
