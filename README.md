@@ -6,10 +6,11 @@ Currently the only supported file types are INI, XML and JSON
 
 [![Build Status](https://travis-ci.org/Achrome/Conphig.png?branch=master)](https://travis-ci.org/Achrome/Conphig)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Achrome/Conphig/badges/quality-score.png?s=83ddcfbe88648c2859974477530b405e7c3e8b3e)](https://scrutinizer-ci.com/g/Achrome/Conphig/)
+[![Code Coverage](https://scrutinizer-ci.com/g/Achrome/Conphig/badges/coverage.png?s=db57a0f44ccff108b0b3f61c134c4fdb02f4c2dd)](https://scrutinizer-ci.com/g/Achrome/Conphig/)
 
 ### Usage
 
-In the application bootstrap, `require 'Conphig/autoload.php'` to set up the autoloader, or if you are using Composer, just 
+In the application bootstrap, `require 'Conphig/autoload.php'` to set up the autoloader, or if you are using Composer, just
 `require 'vendor/autoload.php'`
 
 ```php
