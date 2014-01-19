@@ -7,3 +7,12 @@ tools:
         excluded_dirs: [vendor]
     external_code_coverage:
       timeout: 600
+    php_analyzer:
+      config:
+        metrics_coupling:
+          enabled: true
+          stable_code:
+            namespace_prefixes: []
+            classes: []
+        metrics_lack_of_cohesion_methods:
+          enabled: true
