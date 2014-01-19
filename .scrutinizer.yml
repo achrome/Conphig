@@ -5,3 +5,5 @@ tools:
     php_cpd: true
     php_pdepend:
         excluded_dirs: [vendor]
+    external_code_coverage:
+      timeout: 600
