@@ -1,16 +1,13 @@
 <?php
 
-namespace Conphig\Exceptions;
-
-use \Exception;
-
 /**
  *
  * @author Ashwin Mukhija
  * @license MIT
  * @link https://github.com/Achrome/Conphig
- *
  */
-class ConfigurationException extends Exception {
-	
-}
+namespace Conphig\Exceptions;
+
+use \Exception;
+
+class ConfigurationException extends Exception {}
