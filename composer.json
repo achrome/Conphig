@@ -3,7 +3,7 @@
 	"homepage": "http://github.com/Achrome/Conphig",
 	"description": "A simple PHP Configuration manager",
 	"license": "MIT",
-	"version": "0.0.2",
+	"version": "0.1.0",
 	"authors": [
 	    {
 	    	"name": "Ashwin Mukhija",
