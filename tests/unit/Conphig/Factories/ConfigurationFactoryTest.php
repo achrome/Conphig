@@ -292,4 +292,129 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $method->setAccessible( TRUE );
     $method->invoke( $factory, NULL );
   }
+  
+  /**
+   * @covers ::create
+   * @covers ::__construct
+   * @covers Conphig\Configurators\IniConfigurator::parseConfig
+   * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
+   * @covers Conphig\Helpers\ConfiguratorHelper::createObjFromArray
+   * @test
+   * @requires PHP 5.5.0
+   */
+  public function newConfigurationFromIniShouldWork( ) {
+    $factory = new ConfigurationFactory( FIXTURES_PATH );
+    $config = $factory->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+    
+    $factory = new ConfigurationFactory( );
+    $config = $factory->create( FIXTURES_PATH );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+    
+    $factory = new ConfigurationFactory( );
+    $config = $factory->setConfigPath( FIXTURES_PATH )->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+  }
+  
+  /**
+   * @covers ::create
+   * @covers ::__construct
+   * @covers Conphig\Configurators\IniConfigurator::parseConfig
+   * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
+   * @covers Conphig\Helpers\ConfiguratorHelper::createObjFromArray
+   * @test
+   * @requires PHP 5.5.0
+   */
+  public function newConfigurationFromAnotherIniShouldWork( ) {
+    $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.ini';
+    $factory = new ConfigurationFactory( $path );
+    $config = $factory->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->logging );
+    $this->assertEquals( $config->logging->engine, 'Monolog' );
+    
+    $factory = new ConfigurationFactory( );
+    $config = $factory->create( $path );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->logging );
+    $this->assertEquals( $config->logging->engine, 'Monolog' );
+    
+    $factory = new ConfigurationFactory( );
+    $config = $factory->setConfigPath( $path )->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->logging );
+    $this->assertEquals( $config->logging->engine, 'Monolog' );
+    
+    $factory = new ConfigurationFactory( FIXTURES_PATH );
+    $config = $factory->setConfigFileName( 'foo' )->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->logging );
+    $this->assertEquals( $config->logging->engine, 'Monolog' );
+  }
+  
+  /**
+   * @covers ::create
+   * @covers ::__construct
+   * @test
+   * @covers Conphig\Configurators\XmlConfigurator::parseConfig
+   * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
+   * @covers Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
+   * @requires PHP 5.5.0
+   */
+  public function newConfigurationFromXmlShouldWork( ) {
+    $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'config.xml';
+    $factory = new ConfigurationFactory( $path );
+    $config = $factory->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+    
+    $factory = new ConfigurationFactory( FIXTURES_PATH );
+    $config = $factory->setConfigType( 'xml' )->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+    
+    $factory = new ConfigurationFactory( );
+    $config = $factory->create( $path );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+  }
+  
+  /**
+   * @covers ::create
+   * @covers ::__construct
+   * @covers Conphig\Configurators\XmlConfigurator::parseConfig
+   * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
+   * @covers Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
+   * @test
+   * @requires PHP 5.5.0
+   */
+  public function newConfigurationFromAnotherXmlShouldWork( ) {
+    $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.xml';
+    $factory = new ConfigurationFactory( $path );
+    $config = $factory->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+    
+    $factory = new ConfigurationFactory( FIXTURES_PATH );
+    $config = $factory->setConfigFileName( 'foo' )->setConfigType( 'xml' )->create( );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+    
+    $factory = new ConfigurationFactory( );
+    $config = $factory->create( $path );
+    $this->assertInstanceOf( Configuration::class, $config );
+    $this->assertNotEmpty( $config->database );
+    $this->assertEquals( $config->database->engine, 'mysql' );
+  }
 }
