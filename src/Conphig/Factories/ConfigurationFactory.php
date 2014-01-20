@@ -106,8 +106,9 @@ class ConfigurationFactory {
   public function create( $fullPath = '' ) {
     if ( $fullPath !== '' ) {
       $this->parseFullPath( $fullPath );
-    }
-    if ( $this->configPath === '' ) {
+    } else if ( $this->configPath !== '' ) {
+      $this->parseFullPath( $this->configPath );
+    } else {
       $this->configPath = getcwd( );
     }
     
@@ -131,6 +132,9 @@ class ConfigurationFactory {
   }
 
   protected function parseFullPath( $path ) {
+    if ( empty($path) ) {
+      throw new ConfigurationException( "Cannot parse empty paths" );
+    }
     $tokens = preg_split( '/\/|\\\/', $path );
     $filename = $tokens[count( $tokens ) - 1];
     
