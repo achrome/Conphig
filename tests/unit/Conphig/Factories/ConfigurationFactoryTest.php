@@ -296,6 +296,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   /**
    * @covers ::create
    * @covers ::__construct
+   * @covers Conphig\Configurators\AbstractConfigurator::__construct
    * @covers Conphig\Configurators\IniConfigurator::parseConfig
    * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
    * @covers Conphig\Helpers\ConfiguratorHelper::createObjFromArray
@@ -328,6 +329,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @covers Conphig\Configurators\IniConfigurator::parseConfig
    * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
    * @covers Conphig\Helpers\ConfiguratorHelper::createObjFromArray
+   * @covers Conphig\Configurators\AbstractConfigurator::__construct
    * @test
    * @requires PHP 5.5.0
    */
@@ -365,6 +367,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @covers Conphig\Configurators\XmlConfigurator::parseConfig
    * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
    * @covers Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
+   * @covers Conphig\Configurators\AbstractConfigurator::__construct
    * @requires PHP 5.5.0
    */
   public function newConfigurationFromXmlShouldWork( ) {
@@ -394,6 +397,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @covers Conphig\Configurators\XmlConfigurator::parseConfig
    * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
    * @covers Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
+   * @covers Conphig\Configurators\AbstractConfigurator::__construct
    * @test
    * @requires PHP 5.5.0
    */
