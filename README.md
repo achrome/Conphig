@@ -1,12 +1,52 @@
 # Welcome to Conphig
 
-It's a simple configuration generator that parses different types of configuration files into an object
+It's a simple configuration generator that parses different types of configuration files into an object.
+The idea behind it is to standardize configuration objects and allowing you to mix and match configuration files as per need.
 
-Currently the only supported file types are INI, XML and JSON
+Currently the only supported file types are INI, XML and JSON. YAML support can be added through custom configuration
 
 [![Build Status](https://travis-ci.org/Achrome/Conphig.png?branch=master)](https://travis-ci.org/Achrome/Conphig)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Achrome/Conphig/badges/quality-score.png?s=83ddcfbe88648c2859974477530b405e7c3e8b3e)](https://scrutinizer-ci.com/g/Achrome/Conphig/)
 [![Code Coverage](https://scrutinizer-ci.com/g/Achrome/Conphig/badges/coverage.png?s=db57a0f44ccff108b0b3f61c134c4fdb02f4c2dd)](https://scrutinizer-ci.com/g/Achrome/Conphig/)
+
+### Installation
+
+#### With Composer
+
+Just add this to your `composer.json`
+
+```json
+{
+	"require": {
+		"achrome/conphig": "*"
+	}
+}
+```
+
+Alternatively, you can use the composer CLI like this
+
+```shell
+$ php composer.phar require achrome/conphig *
+```
+
+Or
+
+```shell
+$ composer require achrome/conphig *
+```
+
+Then, in the application bootstrap, just `require 'vendor/autoload.php'`.
+
+#### Without Composer (Honestly, why?)
+
+You can clone this repo directly and use it as well, like this
+
+```shell
+$ mkdir vendor && cd vendor
+$ git clone https://github.com/Achrome/Conphig.git
+```
+
+Then, you just have to `require 'Conphig/autoload.php'` in the bootstrap file.
 
 ### Usage
 
@@ -93,3 +133,13 @@ use Conphig\Factories\ConfigurationFactory;
 $configCreator = new ConfigurationFactory('/path/to/custom/config/dir');
 $configuration = $configCreator->registerConfigHandler('custom', 'Foo\\BarConfigurator')->create();
 ```
+
+### License
+[MIT](https://github.com/Achrome/Conphig/LICENSE)
+
+### Contributing
+Just add new features as you want and send out a pull request! If you see an issue, just open it in [issues](https://github.com/Achrome/Conphig/issues)
+
+### Contact
+[Github](https://github.com/Achrome)
+[Mail](mailto:achromatic.rainbow@gmail.com)
