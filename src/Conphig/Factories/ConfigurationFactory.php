@@ -74,7 +74,7 @@ class ConfigurationFactory {
   }
 
   public function setConfigParams( $configParams ) {
-    $this->setConfigParams( $configParams );
+    $this->configParams = $configParams;
     return $this;
   }
 

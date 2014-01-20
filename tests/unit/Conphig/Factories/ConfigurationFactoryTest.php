@@ -37,11 +37,52 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   public function newInstanceShouldStrictlyEnforceString( ) {
     $factory = new ConfigurationFactory( [ ] );
   }
+  
+  /**
+   * @covers ::__construct
+   * @test
+   * @requires PHP 5.5.0
+   */
+  public function newInstanceWithoutArgsShouldPass( ) {
+    $factory = new ConfigurationFactory( );
+    $this->assertInstanceOf( ConfigurationFactory::class, $factory );
+  }
+  
+  /**
+   * @covers ::__construct
+   * @test
+   * @requires PHP 5.5.0
+   * @requires ReflectionProperty::setAccessible
+   */
+  public function newInstanceShouldCorrectlySetPrivateVars( ) {
+    $factory = new ConfigurationFactory( __DIR__ );
+    $refl = new ReflectionClass( ConfigurationFactory::class );
+    
+    $rConfigPath = $refl->getProperty( 'configPath' );
+    $rConfigFileName = $refl->getProperty( 'configFileName' );
+    $rConfigType = $refl->getProperty( 'configType' );
+    $rConfigParams = $refl->getProperty( 'configParams' );
+    
+    $rConfigFileName->setAccessible( TRUE );
+    $rConfigPath->setAccessible( TRUE );
+    $rConfigType->setAccessible( TRUE );
+    $rConfigParams->setAccessible( TRUE );
+    
+    $this->assertEquals( $rConfigFileName->getValue( $factory ), 'config' );
+    $this->assertEquals( $rConfigPath->getValue( $factory ), __DIR__ );
+    $this->assertEquals( $rConfigType->getValue( $factory ), 'ini' );
+    $this->assertEquals( $rConfigParams->getValue( $factory ), [ ] );
+    
+    $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.bar';
+    $factory = new ConfigurationFactory( $path );
+    $this->assertEquals( $rConfigPath->getValue( $factory ), $path );
+  }
 
   /**
    * @covers ::setConfigFileName
    * @covers ::setConfigType
    * @covers ::setConfigPath
+   * @covers ::setConfigParams
    * @test
    * @requires PHP 5.5.0
    */
@@ -54,6 +95,9 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertInstanceOf( ConfigurationFactory::class, $test );
     $this->assertEquals( $test, $factory );
     $test = $factory->setConfigType( 'baz' );
+    $this->assertInstanceOf( ConfigurationFactory::class, $test );
+    $this->assertEquals( $test, $factory );
+    $test = $factory->setConfigParams( 'quux' );
     $this->assertInstanceOf( ConfigurationFactory::class, $test );
     $this->assertEquals( $test, $factory );
   }
@@ -113,10 +157,9 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $refl = new ReflectionClass( ConfigurationFactory::class );
     $prop = $refl->getProperty( 'configPath' );
     $prop->setAccessible( TRUE );
-    $method = $refl->getMethod( 'setConfigPath' );
     $val = $prop->getValue( $factory );
     $this->assertEmpty( $val );
-    $method->invoke( $factory, 'foo' );
+    $factory->setConfigPath( 'foo' );
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, 'foo' );
   }
@@ -134,8 +177,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $prop->setAccessible( TRUE );
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, 'ini' );
-    $method = $refl->getMethod( 'setConfigType' );
-    $method->invoke( $factory, 'bar' );
+    $factory->setConfigType( 'bar' );
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, 'bar' );
   }
@@ -148,15 +190,33 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    */
   public function privateConfigFileNameShouldBeCorrectlySet( ) {
     $factory = new ConfigurationFactory( );
-    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $refl = new ReflectionClass( ConfigurationFactory::class );
     $prop = $refl->getProperty( 'configFileName' );
     $prop->setAccessible( TRUE );
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, 'config' );
-    $method = $refl->getMethod( 'setConfigFileName' );
-    $method->invoke( $factory, 'baz' );
+    $factory->setConfigFileName( 'baz' );
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, 'baz' );
+  }
+  
+  /**
+   * @covers ::setConfigParams
+   * @test
+   * @requires PHP 5.5.0
+   * @requires ReflectionProperty::setAccessible
+   */
+  public function privateConfigParamsShouldBeCorrectlySet( ) {
+    $factory = new ConfigurationFactory( );
+    $refl = new ReflectionClass( ConfigurationFactory::class );
+    $prop = $refl->getProperty( 'configParams' );
+    $prop->setAccessible( TRUE );
+    $val = $prop->getValue( $factory );
+    $this->assertEquals( $val, [ ] );
+    $this->assertEmpty( $val );
+    $factory->setConfigParams( ['foo', 'bar'] );
+    $val = $prop->getValue( $factory );
+    $this->assertEquals( $val, ['foo', 'bar'] );
   }
   
   /**
