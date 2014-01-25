@@ -227,7 +227,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * @covers                    ::parseFullPath
+   * @covers                    ::_parseFullPath
    * @requires                  PHP 5.5.0
    * @requires                  ReflectionMethod::setAccessible
    * @test
@@ -273,7 +273,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * @covers                    ::parseFullPath
+   * @covers                    ::_parseFullPath
    * @requires                  PHP 5.5.0
    * @requires                  ReflectionMethod::setAccessible
    * @expectedException         Conphig\Exceptions\ConfigurationException
@@ -289,7 +289,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * @covers                    ::parseFullPath
+   * @covers                    ::_parseFullPath
    * @expectedException         Conphig\Exceptions\ConfigurationException
    * @expectedExceptionMessage  Cannot parse empty path
    * @requires                  PHP 5.5.0
@@ -376,7 +376,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @covers                    ::__construct
    * @covers                    Conphig\Configurators\XmlConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
-   * @covers                    Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
+   * @covers                    Conphig\Configurators\XmlConfigurator::_createConfigFromXmlElements
    * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
    * @requires                  PHP 5.5.0
    * @test
@@ -407,7 +407,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @covers                    ::__construct
    * @covers                    Conphig\Configurators\XmlConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
-   * @covers                    Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
+   * @covers                    Conphig\Configurators\XmlConfigurator::_createConfigFromXmlElements
    * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
    * @requires                  PHP 5.5.0
    * @test
