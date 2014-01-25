@@ -109,13 +109,8 @@ class ConfigurationFactory {
    * @return Configuration
    */
   public function create($fullPath = '') {
-    if ($fullPath !== '') {
-      $this->_parseFullPath($fullPath);
-    } else if ($this->_configPath !== '') {
-      $this->_parseFullPath($this->_configPath);
-    } else {
-      $this->_configPath = getcwd();
-    }
+    
+    $this->_assignCorrectPath($fullPath);
     
     $filePath = 
         $this->_configPath . DIRECTORY_SEPARATOR . $this->_configFileName .
@@ -163,6 +158,16 @@ class ConfigurationFactory {
     if (isset($name) && $name !== '' && isset($ext) && $ext !== null) {
       $this->_configFileName = $name;
       $this->_configType = $ext;
+    }
+  }
+  
+  protected function _assignCorrectPath($fullPath = '') {
+    if ($fullPath !== '') {
+      $this->_parseFullPath($fullPath);
+    } else if ($this->_configPath !== '') {
+      $this->_parseFullPath($this->_configPath);
+    } else {
+      $this->_configPath = getcwd();
     }
   }
 }

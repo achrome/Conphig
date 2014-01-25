@@ -13,7 +13,6 @@ use Conphig\Factories\ConfigurationFactory;
 use Conphig\Exceptions\ConfigurationException;
 use Conphig\Configuration\Configuration;
 use Conphig\Configurators\IniConfigurator;
-use Conphig;
 use Tests\FooConfigurator;
 
 /**
@@ -109,6 +108,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
+   * @covers                    ::_assignCorrectPath
    * @expectedException         Conphig\Exceptions\ConfigurationException
    * @expectedExceptionMessage  Unable to find file at foobar
    * @test
@@ -120,6 +120,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
+   * @covers                    ::_assignCorrectPath
    * @requires                  PHP 5.5.0
    * @test
    */
@@ -285,6 +286,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
+   * @covers                    ::_assignCorrectPath
    * @expectedException         Conphig\Exceptions\ConfigurationException
    * @expectedExceptionMessage  Invalid configuration type used
    * @test
@@ -331,6 +333,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   /**
    * @covers                    ::create
    * @covers                    ::__construct
+   * @covers                    ::_assignCorrectPath
    * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
    * @covers                    Conphig\Configurators\IniConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
@@ -360,6 +363,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
+   * @covers                    ::_assignCorrectPath
    * @covers                    ::__construct
    * @covers                    Conphig\Configurators\IniConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
@@ -397,6 +401,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
+   * @covers                    ::_assignCorrectPath
    * @covers                    ::__construct
    * @covers                    Conphig\Configurators\XmlConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
@@ -428,6 +433,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
+   * @covers                    ::_assignCorrectPath
    * @covers                    ::__construct
    * @covers                    Conphig\Configurators\XmlConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
@@ -455,5 +461,24 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertInstanceOf(Configuration::class, $config);
     $this->assertNotEmpty($config->database);
     $this->assertEquals($config->database->engine, 'mysql');
+  }
+  
+  /**
+   * @covers                    ::_assignCorrectPath
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionProperty::setAccessible
+   * @test
+   */
+  public function checkPathCreationWithNoGivenPath() {
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $factory = $refl->newInstanceArgs([]);
+    $rAssignCorrectPath = $refl->getMethod('_assignCorrectPath');
+    $rAssignCorrectPath->setAccessible(true);
+    $rAssignCorrectPath->invoke($factory);
+    
+    $rConfigPath = $refl->getProperty('_configPath');
+    $rConfigPath->setAccessible(true);
+    
+    $this->assertEquals($rConfigPath->getValue($factory), getcwd());
   }
 }
