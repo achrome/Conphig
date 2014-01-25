@@ -3,19 +3,18 @@
  *
  * @author Ashwin Mukhija
  * @package Conphig
- *         The test file for ConfigurationFactory
+ *          The test file for ConfigurationFactory
  */
 use \PHPUnit_Framework_TestCase;
 use \ReflectionClass;
 use \Exception;
+use \stdClass;
 use Conphig\Factories\ConfigurationFactory;
 use Conphig\Exceptions\ConfigurationException;
 use Conphig\Configuration\Configuration;
 
 /**
- * 
  * @coversDefaultClass Conphig\Factories\ConfigurationFactory
- *
  */
 class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
@@ -24,30 +23,31 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @test
    */
   public function defaultSupportedTypesShouldBe3( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $this->assertEquals( count( $factory->getSupportedTypes( ) ), 3 );
   }
 
   /**
    * @covers ::__construct
    * @expectedException InvalidArgumentException
-   * @expectedExceptionMessage Invalid type given. Expected string, got array
+   * @expectedExceptionMessage Invalid type given.
+   * Expected string, got array
    * @test
    */
   public function newInstanceShouldStrictlyEnforceString( ) {
-    $factory = new ConfigurationFactory( [ ] );
+    $factory = new ConfigurationFactory( [] );
   }
-  
+
   /**
    * @covers ::__construct
    * @test
    * @requires PHP 5.5.0
    */
   public function newInstanceWithoutArgsShouldPass( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $this->assertInstanceOf( ConfigurationFactory::class, $factory );
   }
-  
+
   /**
    * @covers ::__construct
    * @test
@@ -71,7 +71,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals( $rConfigFileName->getValue( $factory ), 'config' );
     $this->assertEquals( $rConfigPath->getValue( $factory ), __DIR__ );
     $this->assertEquals( $rConfigType->getValue( $factory ), 'ini' );
-    $this->assertEquals( $rConfigParams->getValue( $factory ), [ ] );
+    $this->assertEquals( $rConfigParams->getValue( $factory ), [] );
     
     $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.bar';
     $factory = new ConfigurationFactory( $path );
@@ -87,7 +87,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @requires PHP 5.5.0
    */
   public function mutatorFunctionsShouldNotChangeTypeOfFactory( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $test = $factory->setConfigFileName( 'foo' );
     $this->assertEquals( $test, $factory );
     $this->assertInstanceOf( ConfigurationFactory::class, $test );
@@ -109,7 +109,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @test
    */
   public function creationWithInvalidPathShouldFail( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $factory->create( 'foobar' );
   }
 
@@ -127,25 +127,27 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   /**
    * @covers ::registerConfigHandler
    * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Class bar not found. Please check that the class exists
+   * @expectedExceptionMessage Class bar not found.
+   * Please check that the class exists
    * @test
    */
   public function registerNonexistentHandlerShouldFail( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $factory->registerConfigHandler( 'foo', 'bar' );
   }
 
   /**
    * @covers ::registerConfigHandler
    * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Class stdClass does not implement the Configurable interface
+   * @expectedExceptionMessage Class stdClass does not implement the
+   * Configurable interface
    * @test
    */
   public function registerInvalidHandlerShouldFail( ) {
-    $factory = new ConfigurationFactory( );
-    $factory->registerConfigHandler( 'foo', \stdClass::class );
+    $factory = new ConfigurationFactory;
+    $factory->registerConfigHandler( 'foo', stdClass::class );
   }
-  
+
   /**
    * @covers ::setConfigPath
    * @test
@@ -153,7 +155,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @requires ReflectionProperty::setAccessible
    */
   public function privateConfigPathShouldBeCorrectlySet( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $refl = new ReflectionClass( ConfigurationFactory::class );
     $prop = $refl->getProperty( 'configPath' );
     $prop->setAccessible( TRUE );
@@ -163,7 +165,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, 'foo' );
   }
-  
+
   /**
    * @covers ::setConfigType
    * @test
@@ -171,7 +173,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @requires ReflectionProperty::setAccessible
    */
   public function privateConfigTypeShouldBeCorrectlySet( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $refl = new ReflectionClass( ConfigurationFactory::class );
     $prop = $refl->getProperty( 'configType' );
     $prop->setAccessible( TRUE );
@@ -181,7 +183,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, 'bar' );
   }
-  
+
   /**
    * @covers ::setConfigFileName
    * @test
@@ -189,7 +191,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @requires ReflectionProperty::setAccessible
    */
   public function privateConfigFileNameShouldBeCorrectlySet( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $refl = new ReflectionClass( ConfigurationFactory::class );
     $prop = $refl->getProperty( 'configFileName' );
     $prop->setAccessible( TRUE );
@@ -199,7 +201,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, 'baz' );
   }
-  
+
   /**
    * @covers ::setConfigParams
    * @test
@@ -207,18 +209,18 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @requires ReflectionProperty::setAccessible
    */
   public function privateConfigParamsShouldBeCorrectlySet( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $refl = new ReflectionClass( ConfigurationFactory::class );
     $prop = $refl->getProperty( 'configParams' );
     $prop->setAccessible( TRUE );
     $val = $prop->getValue( $factory );
-    $this->assertEquals( $val, [ ] );
+    $this->assertEquals( $val, [] );
     $this->assertEmpty( $val );
     $factory->setConfigParams( ['foo', 'bar'] );
     $val = $prop->getValue( $factory );
     $this->assertEquals( $val, ['foo', 'bar'] );
   }
-  
+
   /**
    * @covers ::parseFullPath
    * @test
@@ -226,7 +228,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @requires ReflectionMethod::setAccessible
    */
   public function protectedParseFullPathShouldWork( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $refl = new ReflectionClass( ConfigurationFactory::class );
     $rConfigType = $refl->getProperty( 'configType' );
     $rConfigPath = $refl->getProperty( 'configPath' );
@@ -249,18 +251,21 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals( $rConfigFileName->getValue( $factory ), 'baz' );
     $this->assertEquals( $rConfigType->getValue( $factory ), 'quux' );
   }
-  
+
   /**
    * @covers ::create
    * @test
    * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Invalid configuration type used 
+   * @expectedExceptionMessage Invalid configuration type used
    */
   public function createWithInvalidTypeShouldFail( ) {
-    $factory = new ConfigurationFactory( FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.bar' );
+    $factory = new ConfigurationFactory( 
+                                        FIXTURES_PATH .
+                                        DIRECTORY_SEPARATOR .
+                                        'foo.bar' );
     $factory->create( );
   }
-  
+
   /**
    * @covers ::parseFullPath
    * @test
@@ -270,13 +275,14 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @requires ReflectionMethod::setAccessible
    */
   public function parseFullPathWithEmptyPathShouldFail( ) {
-    $factory = new ConfigurationFactory( );
-    $refl = new ReflectionClass( ConfigurationFactory::class );
+    $factory = new ConfigurationFactory;
+    $refl = new ReflectionClass( ConfigurationFactory::class )
+    ;
     $method = $refl->getMethod( 'parseFullPath' );
     $method->setAccessible( TRUE );
     $method->invoke( $factory, '' );
   }
-  
+
   /**
    * @covers ::parseFullPath
    * @test
@@ -286,13 +292,13 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @requires ReflectionMethod::setAccessible
    */
   public function parseFullPathWithNullPathShouldFail( ) {
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $refl = new ReflectionClass( ConfigurationFactory::class );
     $method = $refl->getMethod( 'parseFullPath' );
     $method->setAccessible( TRUE );
     $method->invoke( $factory, NULL );
   }
-  
+
   /**
    * @covers ::create
    * @covers ::__construct
@@ -310,19 +316,19 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertNotEmpty( $config->database );
     $this->assertEquals( $config->database->engine, 'mysql' );
     
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $config = $factory->create( FIXTURES_PATH );
     $this->assertInstanceOf( Configuration::class, $config );
     $this->assertNotEmpty( $config->database );
     $this->assertEquals( $config->database->engine, 'mysql' );
     
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $config = $factory->setConfigPath( FIXTURES_PATH )->create( );
     $this->assertInstanceOf( Configuration::class, $config );
     $this->assertNotEmpty( $config->database );
     $this->assertEquals( $config->database->engine, 'mysql' );
   }
-  
+
   /**
    * @covers ::create
    * @covers ::__construct
@@ -341,13 +347,13 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertNotEmpty( $config->logging );
     $this->assertEquals( $config->logging->engine, 'Monolog' );
     
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $config = $factory->create( $path );
     $this->assertInstanceOf( Configuration::class, $config );
     $this->assertNotEmpty( $config->logging );
     $this->assertEquals( $config->logging->engine, 'Monolog' );
     
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $config = $factory->setConfigPath( $path )->create( );
     $this->assertInstanceOf( Configuration::class, $config );
     $this->assertNotEmpty( $config->logging );
@@ -359,7 +365,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertNotEmpty( $config->logging );
     $this->assertEquals( $config->logging->engine, 'Monolog' );
   }
-  
+
   /**
    * @covers ::create
    * @covers ::__construct
@@ -390,7 +396,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertNotEmpty( $config->database );
     $this->assertEquals( $config->database->engine, 'mysql' );
   }
-  
+
   /**
    * @covers ::create
    * @covers ::__construct
@@ -415,7 +421,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertNotEmpty( $config->database );
     $this->assertEquals( $config->database->engine, 'mysql' );
     
-    $factory = new ConfigurationFactory( );
+    $factory = new ConfigurationFactory;
     $config = $factory->create( $path );
     $this->assertInstanceOf( Configuration::class, $config );
     $this->assertNotEmpty( $config->database );

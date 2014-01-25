@@ -33,9 +33,10 @@ class ConfigurationFactory {
    * @var array
    */
   private $supportedTypes = [ 
-    'ini' => 'Conphig\\Configurators\\IniConfigurator', 
-    'xml' => 'Conphig\\Configurators\\XmlConfigurator', 
-    'json' => 'Conphig\\Configurators\\JsonConfigurator' ];
+      'ini' => 'Conphig\\Configurators\\IniConfigurator', 
+      'xml' => 'Conphig\\Configurators\\XmlConfigurator', 
+      'json' => 'Conphig\\Configurators\\JsonConfigurator'
+  ];
 
   /**
    *
@@ -47,46 +48,49 @@ class ConfigurationFactory {
    *
    * @var array
    */
-  private $configParams = [ ];
+  private $configParams = [];
 
-  public function __construct( $configPath = '' ) {
-    if ( !is_string( $configPath ) ) {
-      throw new InvalidArgumentException( 
-          "Invalid type given. Expected string, got " . gettype( $configPath ) );
+  public function __construct($configPath = '') {
+    if (!is_string($configPath)) {
+      throw new InvalidArgumentException(
+          "Invalid type given. Expected string, got " . gettype($configPath)
+      );
     }
     
-    $this->setConfigPath( $configPath );
+    $this->setConfigPath($configPath);
   }
 
-  public function setConfigPath( $configPath ) {
+  public function setConfigPath($configPath) {
     $this->configPath = $configPath;
     return $this;
   }
 
-  public function setConfigType( $configType ) {
+  public function setConfigType($configType) {
     $this->configType = $configType;
     return $this;
   }
 
-  public function setConfigFileName( $fileName ) {
+  public function setConfigFileName($fileName) {
     $this->configFileName = $fileName;
     return $this;
   }
 
-  public function setConfigParams( $configParams ) {
+  public function setConfigParams($configParams) {
     $this->configParams = $configParams;
     return $this;
   }
 
-  public function registerConfigHandler( $configType, $configClass ) {
-    if ( !class_exists( $configClass ) ) {
-      throw new ConfigurationException( 
-          "Class $configClass not found. Please check that the class exists" );
+  public function registerConfigHandler($configType, $configClass) {
+    if (!class_exists($configClass)) {
+      throw new ConfigurationException(
+          "Class $configClass not found. Please check that the class exists"
+      );
     }
     
-    if ( !is_a( $configClass, 'Conphig\\Interfaces\\Configurable' ) ) {
-      throw new ConfigurationException( 
-          "Class $configClass does not implement the Configurable interface" );
+    if (!is_a($configClass, 'Conphig\\Interfaces\\Configurable')) {
+      throw new ConfigurationException(
+          "Class $configClass does not implement the Configurable interface"
+      );
     }
     
     $this->supportedTypes[$configType] = $configClass;
@@ -95,7 +99,7 @@ class ConfigurationFactory {
     return $this;
   }
 
-  public function getSupportedTypes( ) {
+  public function getSupportedTypes() {
     return $this->supportedTypes;
   }
 
@@ -103,49 +107,59 @@ class ConfigurationFactory {
    *
    * @return Configuration
    */
-  public function create( $fullPath = '' ) {
-    if ( $fullPath !== '' ) {
-      $this->parseFullPath( $fullPath );
-    } else if ( $this->configPath !== '' ) {
-      $this->parseFullPath( $this->configPath );
+  public function create($fullPath = '') {
+    if ($fullPath !== '') {
+      $this->parseFullPath($fullPath);
+    } else if ($this->configPath !== '') {
+      $this->parseFullPath($this->configPath);
     } else {
-      $this->configPath = getcwd( );
+      $this->configPath = getcwd();
     }
     
-    $filePath = $this->configPath . DIRECTORY_SEPARATOR . $this->configFileName .
-         '.' . $this->configType;
-    if ( !file_exists( $filePath ) ) {
-      throw new ConfigurationException( "Unable to find file at $filePath" );
+    $filePath = 
+        $this->configPath . DIRECTORY_SEPARATOR . $this->configFileName .
+        '.' . $this->configType;
+    
+    if (!file_exists($filePath)) {
+      throw new ConfigurationException(
+          "Unable to find file at $filePath"
+      );
     }
     
-    if ( !array_key_exists( $this->configType, $this->supportedTypes ) ) {
-      throw new ConfigurationException( "Invalid configuration type used" );
+    if (!array_key_exists($this->configType, $this->supportedTypes)) {
+      throw new ConfigurationException(
+          "Invalid configuration type used"
+      );
     }
     
-    $reflectionClass = new ReflectionClass( 
-        $this->supportedTypes[$this->configType] );
-    $configurator = $reflectionClass->newInstanceArgs( 
-        array ( $filePath, $this->configParams ) );
-    $configurator->parseConfig( );
+    $reflectionClass = 
+        new ReflectionClass($this->supportedTypes[$this->configType]);
+    $configurator = 
+        $reflectionClass->newInstanceArgs([$filePath, $this->configParams]);
+    $configurator->parseConfig();
     
-    return $configurator->getConfiguration( );
+    return $configurator->getConfiguration();
   }
 
-  protected function parseFullPath( $path ) {
-    if ( empty($path) ) {
-      throw new ConfigurationException( "Cannot parse empty paths" );
+  protected function parseFullPath($path) {
+    if (empty($path)) {
+      throw new ConfigurationException(
+          "Cannot parse empty paths"
+      );
     }
-    $tokens = preg_split( '/\/|\\\/', $path );
-    $filename = $tokens[count( $tokens ) - 1];
+    
+    $tokens = preg_split('/\/|\\\/', $path);
+    $ctokens = count($tokens); 
+    $filename = $tokens[$ctokens - 1];
     
     // Check whether the path terminates with a file name or not.
-    if ( strpos( $filename, '.' ) !== FALSE ) {
-      list ( $name, $ext ) = explode( '.', $filename );
-      unset( $tokens[count( $tokens ) - 1] );
+    if (strpos($filename, '.') !== false ) {
+      list ($name, $ext) = explode('.', $filename);
+      unset($tokens[$ctokens - 1]);
     }
     
-    $this->configPath = implode( DIRECTORY_SEPARATOR, $tokens );
-    if ( isset( $name ) && $name !== '' && isset( $ext ) && $ext !== NULL ) {
+    $this->configPath = implode(DIRECTORY_SEPARATOR, $tokens);
+    if (isset($name) && $name !== '' && isset($ext) && $ext !== null) {
       $this->configFileName = $name;
       $this->configType = $ext;
     }

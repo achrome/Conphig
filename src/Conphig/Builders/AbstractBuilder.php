@@ -14,11 +14,11 @@ abstract class AbstractBuilder implements Buildable {
 
   protected $classname;
 
-  protected $processedArgs = [ ];
+  protected $processedArgs = [];
 
-  protected $mandatoryAttrs = [ ];
+  protected $mandatoryAttrs = [];
 
-  protected $optionalAttrs = [ ];
+  protected $optionalAttrs = [];
 
-  abstract protected function processArgs( $argArray );
+  abstract protected function processArgs($argArray);
 }

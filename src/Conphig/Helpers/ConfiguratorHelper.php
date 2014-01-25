@@ -14,23 +14,35 @@ use \Exception;
 
 class ConfiguratorHelper {
 
-  public function createObjFromArray( $inArray, 
-      $objType = 'Conphig\\Configuration\\Configuration', $objArgs = [] ) {
-    if ( !is_array( $inArray ) ) throw new InvalidArgumentException( 
-        "Expected an array, got a " .
-             gettype( $inArray ) );
+  static public function 
+      createObjFromArray($inArray, 
+                         $objType = 'Conphig\\Configuration\\Configuration', 
+                         $objArgs = []) {
+    if (!is_array( $inArray)) {
+      throw new InvalidArgumentException(
+          "Expected an array, got a " . gettype($inArray)
+      );
+    }
     
-    $reflector = new ReflectionClass( $objType );
-    $outObj = method_exists( $objType, '__construct' ) ? $reflector->newInstance( 
-        $objArgs ) : $reflector->newInstanceWithoutConstructor( );
+    $reflector = new ReflectionClass($objType);
+    $outObj = 
+        method_exists($objType, '__construct') ? 
+        $reflector->newInstance($objArgs) : 
+        $reflector->newInstanceWithoutConstructor();
     
-    if ( !method_exists( $outObj, '__set' ) ||
-         !method_exists( $outObj, '__get' ) ) throw new Exception( 
-        "$objType does not implement methods __get and __set" );
+    if (!method_exists($outObj, '__set') ||
+        !method_exists($outObj, '__get')) {
+      throw new Exception(
+          "$objType does not implement methods __get and __set"
+      );
+    }
     
-    foreach ( $inArray as $key => $value )
-      $outObj->$key = is_array( $value ) ? $this->createObjFromArray( $value, 
-          $objType, $objArgs ) : $value;
+    foreach ($inArray as $key => $value) {
+      $outObj->$key = 
+          is_array($value) ? 
+          self::createObjFromArray($value, $objType, $objArgs) : 
+          $value;
+    }
     
     return $outObj;
   }

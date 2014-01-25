@@ -10,6 +10,6 @@ namespace Conphig\Interfaces;
 
 interface Configurable {
 
-  public function parseConfig( );
+  public function parseConfig();
   
 }

@@ -10,6 +10,6 @@ namespace Conphig\Interfaces;
 
 interface Buildable {
   
-  public function build( );
+  public function build();
   
 }

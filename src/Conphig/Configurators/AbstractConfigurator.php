@@ -36,12 +36,12 @@ abstract class AbstractConfigurator implements Configurable {
    */
   protected $extraParams;
 
-  public function __construct( $filePath, $extraParams = [] ) {
+  public function __construct($filePath, $extraParams = []) {
     $this->filePath = $filePath;
     $this->extraParams = $extraParams;
   }
 
-  public function getConfiguration( ) {
+  public function getConfiguration() {
     return $this->configuration;
   }
 }
