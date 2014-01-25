@@ -1,5 +1,5 @@
 filter:
-    excluded_paths: [vendor/*, app/*, web/*]
+    excluded_paths: [vendor/*, tests/*]
 
 tools:
     php_cpd: true
