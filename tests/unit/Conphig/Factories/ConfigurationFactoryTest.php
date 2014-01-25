@@ -12,6 +12,9 @@ use \stdClass;
 use Conphig\Factories\ConfigurationFactory;
 use Conphig\Exceptions\ConfigurationException;
 use Conphig\Configuration\Configuration;
+use Conphig\Configurators\IniConfigurator;
+use Conphig;
+use Tests\FooConfigurator;
 
 /**
  * @coversDefaultClass Conphig\Factories\ConfigurationFactory
@@ -112,7 +115,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    */
   public function creationWithInvalidPathShouldFail() {
     $factory = new ConfigurationFactory;
-    $factory->create( 'foobar' );
+    $factory->create('foobar');
   }
 
   /**
@@ -140,12 +143,33 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   /**
    * @covers                    ::registerConfigHandler
    * @expectedException         Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage  Class stdClass does not implement the Configurable interface
+   * @expectedExceptionMessage  Class stdClass does not extend AbstractConfigurator
    * @test
    */
   public function registerInvalidHandlerShouldFail() {
     $factory = new ConfigurationFactory;
     $factory->registerConfigHandler('foo', stdClass::class);
+  }
+  
+  /**
+   * @covers                    ::registerConfigHandler
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionProperty::setAccessible
+   * @test
+   */
+  public function registerValidHandlerShouldPass() {
+    $factory = new ConfigurationFactory;
+    require FIXTURES_PATH . DIRECTORY_SEPARATOR . 'FooConfigurator.php';
+    $factory->registerConfigHandler('foo', 'FooConfigurator');
+    $this->assertEquals(count($factory->getSupportedTypes()), 4);
+    $this->assertContains('FooConfigurator', $factory->getSupportedTypes());
+    $this->assertEquals($factory->getSupportedTypes()['foo'], 'FooConfigurator');
+    
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $rConfigType = $refl->getProperty('_configType');
+    $rConfigType->setAccessible(true);
+    $value = $rConfigType->getValue($factory);
+    $this->assertEquals($value, 'foo');
   }
 
   /**

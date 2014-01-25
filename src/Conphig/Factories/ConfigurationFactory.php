@@ -13,6 +13,7 @@ use \ReflectionClass;
 use Conphig\Exceptions\ConfigurationException;
 use Conphig\Configuration\Configuration;
 use \InvalidArgumentException;
+use Conphig\Configurators\AbstractConfigurator;
 
 class ConfigurationFactory {
 
@@ -87,9 +88,9 @@ class ConfigurationFactory {
       );
     }
     
-    if (!is_a($configClass, 'Conphig\\Interfaces\\Configurable')) {
+    if (!is_subclass_of($configClass, AbstractConfigurator::class)) {
       throw new ConfigurationException(
-          "Class $configClass does not implement the Configurable interface"
+          "Class $configClass does not extend AbstractConfigurator"
       );
     }
     

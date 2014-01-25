@@ -20,6 +20,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-phpcs');
   grunt.loadNpmTasks('grunt-phpunit');
   
-  grunt.registerTask('default', ['phpcs']);
-  grunt.registerTask('test', ['phpunit']);
+  grunt.registerTask('default', function() {
+    grunt.task.run('phpcs', 'phpunit');
+  });
 }
