@@ -14,15 +14,15 @@ use Conphig\Helpers\ConfiguratorHelper;
 class JsonConfigurator extends AbstractConfigurator {
 
   public function parseConfig() {
-    $json = file_get_contents($this->filePath);
-    if ($json === FALSE) {
+    $jsonConf = file_get_contents($this->_filePath);
+    if ($jsonConf === false) {
       throw new ConfigurationException(
           "Unable to read config file" 
       );
     }
     
-    $this->intermediateConf = json_decode($json, true);
-    $this->configuration = 
-        ConfiguratorHelper::createObjFromArray($this->intermediateConf);
+    $this->_intermediateConf = json_decode($jsonConf, true);
+    $this->_configuration = 
+        ConfiguratorHelper::createObjFromArray($this->_intermediateConf);
   }
 }

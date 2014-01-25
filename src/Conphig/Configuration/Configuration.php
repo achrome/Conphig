@@ -2,9 +2,9 @@
 
 /**
  *
- * @author Ashwin Mukhija
- * @license MIT
- * @link https://github.com/Achrome/Conphig
+ * @author    Ashwin Mukhija
+ * @license   MIT
+ * @link      https://github.com/Achrome/Conphig
  */
 namespace Conphig\Configuration;
 
@@ -14,27 +14,27 @@ use Conphig\Exceptions\ConfigurationException;
 
 class Configuration {
 
-  private $registry = [];
+  private $_registry = [];
 
   public function __get($key) {
-    return $this->registry[$key];
+    return $this->_registry[$key];
   }
 
   public function __set($key, $value) {
-    $this->registry[$key] = $value;
+    $this->_registry[$key] = $value;
   }
 
   public function build() {
     $builtReg = [];
-    foreach($this->registry as $key => $config) {
+    foreach($this->_registry as $key => $config) {
       $builtReg[$key] = $this->recursivelyBuildClasses($config);
     }
-    $this->registry = $builtReg;
+    $this->_registry = $builtReg;
     return $this;
   }
 
   protected function getRegistry() {
-    return $this->registry;
+    return $this->_registry;
   }
 
   protected function recursivelyBuildClasses(Configuration $config) {
@@ -46,8 +46,9 @@ class Configuration {
         $classname = '\\\\' . $classname;
         $reflector = new ReflectionClass($classname);
       } else {
-        throw new 
-            ConfigurationException("Unable to resolve class name $classname");
+        throw new ConfigurationException(
+            "Unable to resolve class name $classname"
+        );
       }
       
       if(method_exists($classname, '__construct')) {

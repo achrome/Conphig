@@ -2,9 +2,9 @@
 
 /**
  *
- * @author Ashwin Mukhija
- * @license MIT
- * @link https://github.com/Achrome/Conphig
+ * @author    Ashwin Mukhija
+ * @license   MIT
+ * @link      https://github.com/Achrome/Conphig
  */
 namespace Conphig\Configurators;
 
@@ -15,14 +15,14 @@ use Conphig\Exceptions\ConfigurationException;
 class IniConfigurator extends AbstractConfigurator {
 
   public function parseConfig() {
-    $this->intermediateConf = parse_ini_file($this->filePath, true);
-    if($this->intermediateConf === FALSE) {
+    $this->_intermediateConf = parse_ini_file($this->_filePath, true);
+    if($this->_intermediateConf === false) {
       throw new ConfigurationException(
           "Could not read the configuration file"
       );
     }
     
-    $this->configuration = 
-        ConfiguratorHelper::createObjFromArray($this->intermediateConf);
+    $this->_configuration = 
+        ConfiguratorHelper::createObjFromArray($this->_intermediateConf);
   }
 }

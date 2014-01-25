@@ -12,39 +12,39 @@ use Conphig\Exceptions\ConfigurationException;
 use Conphig\Configuration\Configuration;
 
 class XmlConfigurator extends AbstractConfigurator {
-
-  protected function isLibxmlLoaded() {
-    return extension_loaded('libxml');
-  }
   
   public function parseConfig() {
-    if (!$this->isLibxmlLoaded()) {
+    if (!$this->_isLibxmlLoaded()) {
       throw new ConfigurationException(
           "libxml is not loaded"
       );
     }
     
-    $this->intermediateConf = simplexml_load_file($this->filePath);
-    if ($this->intermediateConf->getName() !== 'config') {
+    $this->_intermediateConf = simplexml_load_file($this->_filePath);
+    if ($this->_intermediateConf->getName() !== 'config') {
       throw new ConfigurationException(
           "All configuration must be wrapped inside <config></config>"
       );
     }
     
-    $this->configuration = 
-        $this->createConfigFromXmlElements($this->intermediateConf);
+    $this->_configuration = 
+        $this->_createConfigFromXmlElements($this->_intermediateConf);
   }
 
-  protected function createConfigFromXmlElements($node) {
+  protected function _createConfigFromXmlElements($node) {
     $configuration = new Configuration;
     foreach($node->children() as $childNode) {
       $nodeName = $childNode->getName();
       $configuration->{$nodeName} = 
           ($childNode->count() > 0 ) ? 
-          $this->createConfigFromXmlElements($childNode) : 
+          $this->_createConfigFromXmlElements($childNode) : 
           (string) $childNode;
     }
     
     return $configuration;
+  }
+  
+  protected function _isLibxmlLoaded() {
+    return extension_loaded('libxml');
   }
 }

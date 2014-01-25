@@ -19,29 +19,28 @@ use Conphig\Configuration\Configuration;
 class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
-   * @covers ::getSupportedTypes
+   * @covers                    ::getSupportedTypes
    * @test
    */
-  public function defaultSupportedTypesShouldBe3( ) {
+  public function defaultSupportedTypesShouldBe3() {
     $factory = new ConfigurationFactory;
-    $this->assertEquals( count( $factory->getSupportedTypes( ) ), 3 );
+    $this->assertEquals(count($factory->getSupportedTypes()), 3);
   }
 
   /**
-   * @covers ::__construct
-   * @expectedException InvalidArgumentException
-   * @expectedExceptionMessage Invalid type given.
-   * Expected string, got array
+   * @covers                    ::__construct
+   * @expectedException         InvalidArgumentException
+   * @expectedExceptionMessage  Invalid type given. Expected string, got array
    * @test
    */
-  public function newInstanceShouldStrictlyEnforceString( ) {
-    $factory = new ConfigurationFactory( [] );
+  public function newInstanceShouldStrictlyEnforceString() {
+    $factory = new ConfigurationFactory([]);
   }
 
   /**
-   * @covers ::__construct
+   * @covers                    ::__construct
+   * @requires                  PHP 5.5.0
    * @test
-   * @requires PHP 5.5.0
    */
   public function newInstanceWithoutArgsShouldPass( ) {
     $factory = new ConfigurationFactory;
@@ -49,382 +48,388 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * @covers ::__construct
+   * @covers                    ::__construct
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionProperty::setAccessible
    * @test
-   * @requires PHP 5.5.0
-   * @requires ReflectionProperty::setAccessible
    */
   public function newInstanceShouldCorrectlySetPrivateVars( ) {
-    $factory = new ConfigurationFactory( __DIR__ );
-    $refl = new ReflectionClass( ConfigurationFactory::class );
+    $factory = new ConfigurationFactory(__DIR__);
+    $refl = new ReflectionClass(ConfigurationFactory::class);
     
-    $rConfigPath = $refl->getProperty( 'configPath' );
-    $rConfigFileName = $refl->getProperty( 'configFileName' );
-    $rConfigType = $refl->getProperty( 'configType' );
-    $rConfigParams = $refl->getProperty( 'configParams' );
+    $rConfigPath = $refl->getProperty('_configPath');
+    $rConfigFileName = $refl->getProperty('_configFileName');
+    $rConfigType = $refl->getProperty('_configType');
+    $rConfigParams = $refl->getProperty('_configParams');
     
-    $rConfigFileName->setAccessible( TRUE );
-    $rConfigPath->setAccessible( TRUE );
-    $rConfigType->setAccessible( TRUE );
-    $rConfigParams->setAccessible( TRUE );
+    $rConfigFileName->setAccessible(true);
+    $rConfigPath->setAccessible(true);
+    $rConfigType->setAccessible(true);
+    $rConfigParams->setAccessible(true);
     
-    $this->assertEquals( $rConfigFileName->getValue( $factory ), 'config' );
-    $this->assertEquals( $rConfigPath->getValue( $factory ), __DIR__ );
-    $this->assertEquals( $rConfigType->getValue( $factory ), 'ini' );
-    $this->assertEquals( $rConfigParams->getValue( $factory ), [] );
+    $this->assertEquals($rConfigFileName->getValue($factory), 'config');
+    $this->assertEquals($rConfigPath->getValue($factory), __DIR__);
+    $this->assertEquals($rConfigType->getValue($factory), 'ini');
+    $this->assertEquals($rConfigParams->getValue($factory), []);
     
     $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.bar';
-    $factory = new ConfigurationFactory( $path );
-    $this->assertEquals( $rConfigPath->getValue( $factory ), $path );
+    $factory = new ConfigurationFactory($path);
+    $this->assertEquals($rConfigPath->getValue($factory), $path);
   }
 
   /**
-   * @covers ::setConfigFileName
-   * @covers ::setConfigType
-   * @covers ::setConfigPath
-   * @covers ::setConfigParams
+   * @covers                    ::setConfigFileName
+   * @covers                    ::setConfigType
+   * @covers                    ::setConfigPath
+   * @covers                    ::setConfigParams
+   * @requires                  PHP 5.5.0
    * @test
-   * @requires PHP 5.5.0
    */
   public function mutatorFunctionsShouldNotChangeTypeOfFactory( ) {
     $factory = new ConfigurationFactory;
-    $test = $factory->setConfigFileName( 'foo' );
-    $this->assertEquals( $test, $factory );
-    $this->assertInstanceOf( ConfigurationFactory::class, $test );
-    $test = $factory->setConfigPath( 'bar' );
-    $this->assertInstanceOf( ConfigurationFactory::class, $test );
-    $this->assertEquals( $test, $factory );
-    $test = $factory->setConfigType( 'baz' );
-    $this->assertInstanceOf( ConfigurationFactory::class, $test );
-    $this->assertEquals( $test, $factory );
-    $test = $factory->setConfigParams( 'quux' );
-    $this->assertInstanceOf( ConfigurationFactory::class, $test );
-    $this->assertEquals( $test, $factory );
+    $test = $factory->setConfigFileName('foo');
+    $this->assertEquals($test, $factory);
+    $this->assertInstanceOf(ConfigurationFactory::class, $test);
+    
+    $test = $factory->setConfigPath('bar');
+    $this->assertInstanceOf( ConfigurationFactory::class, $test);
+    $this->assertEquals($test, $factory);
+    
+    $test = $factory->setConfigType('baz');
+    $this->assertInstanceOf(ConfigurationFactory::class, $test);
+    $this->assertEquals($test, $factory);
+    
+    $test = $factory->setConfigParams('quux');
+    $this->assertInstanceOf(ConfigurationFactory::class, $test);
+    $this->assertEquals($test, $factory);
   }
 
   /**
-   * @covers ::create
-   * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Unable to find file at foobar
+   * @covers                    ::create
+   * @expectedException         Conphig\Exceptions\ConfigurationException
+   * @expectedExceptionMessage  Unable to find file at foobar
    * @test
    */
-  public function creationWithInvalidPathShouldFail( ) {
+  public function creationWithInvalidPathShouldFail() {
     $factory = new ConfigurationFactory;
     $factory->create( 'foobar' );
   }
 
   /**
-   * @covers ::create
+   * @covers                    ::create
+   * @requires                  PHP 5.5.0
    * @test
-   * @requires PHP 5.5.0
    */
-  public function creationWithValidPathShouldPass( ) {
-    $factory = new ConfigurationFactory( FIXTURES_PATH );
-    $conf = $factory->create( );
-    $this->assertInstanceOf( Configuration::class, $conf );
+  public function creationWithValidPathShouldPass() {
+    $factory = new ConfigurationFactory(FIXTURES_PATH);
+    $conf = $factory->create();
+    $this->assertInstanceOf(Configuration::class, $conf);
   }
 
   /**
-   * @covers ::registerConfigHandler
-   * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Class bar not found.
-   * Please check that the class exists
+   * @covers                    ::registerConfigHandler
+   * @expectedException         Conphig\Exceptions\ConfigurationException
+   * @expectedExceptionMessage  Class bar not found. Please check that the class exists
    * @test
    */
-  public function registerNonexistentHandlerShouldFail( ) {
+  public function registerNonexistentHandlerShouldFail() {
     $factory = new ConfigurationFactory;
-    $factory->registerConfigHandler( 'foo', 'bar' );
+    $factory->registerConfigHandler('foo', 'bar');
   }
 
   /**
-   * @covers ::registerConfigHandler
-   * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Class stdClass does not implement the
-   * Configurable interface
+   * @covers                    ::registerConfigHandler
+   * @expectedException         Conphig\Exceptions\ConfigurationException
+   * @expectedExceptionMessage  Class stdClass does not implement the Configurable interface
    * @test
    */
-  public function registerInvalidHandlerShouldFail( ) {
+  public function registerInvalidHandlerShouldFail() {
     $factory = new ConfigurationFactory;
-    $factory->registerConfigHandler( 'foo', stdClass::class );
+    $factory->registerConfigHandler('foo', stdClass::class);
   }
 
   /**
-   * @covers ::setConfigPath
+   * @covers                    ::setConfigPath
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionProperty::setAccessible
    * @test
-   * @requires PHP 5.5.0
-   * @requires ReflectionProperty::setAccessible
    */
-  public function privateConfigPathShouldBeCorrectlySet( ) {
+  public function privateConfigPathShouldBeCorrectlySet() {
     $factory = new ConfigurationFactory;
-    $refl = new ReflectionClass( ConfigurationFactory::class );
-    $prop = $refl->getProperty( 'configPath' );
-    $prop->setAccessible( TRUE );
-    $val = $prop->getValue( $factory );
-    $this->assertEmpty( $val );
-    $factory->setConfigPath( 'foo' );
-    $val = $prop->getValue( $factory );
-    $this->assertEquals( $val, 'foo' );
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $prop = $refl->getProperty('_configPath');
+    $prop->setAccessible(true);
+    
+    $val = $prop->getValue($factory);
+    $this->assertEmpty($val);
+    
+    $factory->setConfigPath('foo');
+    $val = $prop->getValue($factory);
+    $this->assertEquals($val, 'foo');
   }
 
   /**
-   * @covers ::setConfigType
+   * @covers                    ::setConfigType
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionProperty::setAccessible
    * @test
-   * @requires PHP 5.5.0
-   * @requires ReflectionProperty::setAccessible
    */
-  public function privateConfigTypeShouldBeCorrectlySet( ) {
+  public function privateConfigTypeShouldBeCorrectlySet() {
     $factory = new ConfigurationFactory;
-    $refl = new ReflectionClass( ConfigurationFactory::class );
-    $prop = $refl->getProperty( 'configType' );
-    $prop->setAccessible( TRUE );
-    $val = $prop->getValue( $factory );
-    $this->assertEquals( $val, 'ini' );
-    $factory->setConfigType( 'bar' );
-    $val = $prop->getValue( $factory );
-    $this->assertEquals( $val, 'bar' );
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $prop = $refl->getProperty('_configType');
+    $prop->setAccessible(true);
+    $val = $prop->getValue($factory);
+    $this->assertEquals($val, 'ini');
+    
+    $factory->setConfigType('bar');
+    $val = $prop->getValue($factory);
+    $this->assertEquals($val, 'bar');
   }
 
   /**
-   * @covers ::setConfigFileName
+   * @covers                      ::setConfigFileName
+   * @requires                    PHP 5.5.0
+   * @requires                    ReflectionProperty::setAccessible
    * @test
-   * @requires PHP 5.5.0
-   * @requires ReflectionProperty::setAccessible
    */
-  public function privateConfigFileNameShouldBeCorrectlySet( ) {
+  public function privateConfigFileNameShouldBeCorrectlySet() {
     $factory = new ConfigurationFactory;
-    $refl = new ReflectionClass( ConfigurationFactory::class );
-    $prop = $refl->getProperty( 'configFileName' );
-    $prop->setAccessible( TRUE );
-    $val = $prop->getValue( $factory );
-    $this->assertEquals( $val, 'config' );
-    $factory->setConfigFileName( 'baz' );
-    $val = $prop->getValue( $factory );
-    $this->assertEquals( $val, 'baz' );
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $prop = $refl->getProperty('_configFileName');
+    $prop->setAccessible(true);
+    $val = $prop->getValue($factory);
+    $this->assertEquals($val, 'config');
+    
+    $factory->setConfigFileName('baz');
+    $val = $prop->getValue($factory);
+    $this->assertEquals($val, 'baz');
   }
 
   /**
-   * @covers ::setConfigParams
+   * @covers                    ::setConfigParams
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionProperty::setAccessible
    * @test
-   * @requires PHP 5.5.0
-   * @requires ReflectionProperty::setAccessible
    */
-  public function privateConfigParamsShouldBeCorrectlySet( ) {
+  public function privateConfigParamsShouldBeCorrectlySet() {
     $factory = new ConfigurationFactory;
-    $refl = new ReflectionClass( ConfigurationFactory::class );
-    $prop = $refl->getProperty( 'configParams' );
-    $prop->setAccessible( TRUE );
-    $val = $prop->getValue( $factory );
-    $this->assertEquals( $val, [] );
-    $this->assertEmpty( $val );
-    $factory->setConfigParams( ['foo', 'bar'] );
-    $val = $prop->getValue( $factory );
-    $this->assertEquals( $val, ['foo', 'bar'] );
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $prop = $refl->getProperty('_configParams');
+    $prop->setAccessible(true);
+    $val = $prop->getValue($factory);
+    $this->assertEquals($val, []);
+    $this->assertEmpty($val);
+    
+    $factory->setConfigParams(['foo', 'bar']);
+    $val = $prop->getValue($factory);
+    $this->assertEquals($val, ['foo', 'bar']);
   }
 
   /**
-   * @covers ::parseFullPath
+   * @covers                    ::parseFullPath
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionMethod::setAccessible
    * @test
-   * @requires PHP 5.5.0
-   * @requires ReflectionMethod::setAccessible
    */
-  public function protectedParseFullPathShouldWork( ) {
+  public function protectedParseFullPathShouldWork() {
     $factory = new ConfigurationFactory;
-    $refl = new ReflectionClass( ConfigurationFactory::class );
-    $rConfigType = $refl->getProperty( 'configType' );
-    $rConfigPath = $refl->getProperty( 'configPath' );
-    $rConfigFileName = $refl->getProperty( 'configFileName' );
-    $rConfigType->setAccessible( TRUE );
-    $rConfigPath->setAccessible( TRUE );
-    $rConfigFileName->setAccessible( TRUE );
-    $method = $refl->getMethod( 'parseFullPath' );
-    $method->setAccessible( TRUE );
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    
+    $rConfigType = $refl->getProperty('_configType');
+    $rConfigPath = $refl->getProperty('_configPath');
+    $rConfigFileName = $refl->getProperty('_configFileName');
+    
+    $rConfigType->setAccessible(true);
+    $rConfigPath->setAccessible(true);
+    $rConfigFileName->setAccessible(true);
+    $method = $refl->getMethod('_parseFullPath');
+    $method->setAccessible(true);
     
     $path = DIRECTORY_SEPARATOR . 'foo' . DIRECTORY_SEPARATOR . 'bar';
-    $method->invoke( $factory, $path );
-    $this->assertEquals( $rConfigPath->getValue( $factory ), $path );
-    $this->assertEquals( $rConfigFileName->getValue( $factory ), 'config' );
-    $this->assertEquals( $rConfigType->getValue( $factory ), 'ini' );
+    $method->invoke($factory, $path);
+    $this->assertEquals($rConfigPath->getValue($factory), $path);
+    $this->assertEquals($rConfigFileName->getValue($factory), 'config');
+    $this->assertEquals($rConfigType->getValue($factory), 'ini');
     
     $fullpath = $path . DIRECTORY_SEPARATOR . 'baz.quux';
-    $method->invoke( $factory, $fullpath );
-    $this->assertEquals( $rConfigPath->getValue( $factory ), $path );
-    $this->assertEquals( $rConfigFileName->getValue( $factory ), 'baz' );
-    $this->assertEquals( $rConfigType->getValue( $factory ), 'quux' );
+    $method->invoke($factory, $fullpath);
+    $this->assertEquals($rConfigPath->getValue($factory), $path);
+    $this->assertEquals($rConfigFileName->getValue($factory), 'baz');
+    $this->assertEquals($rConfigType->getValue($factory), 'quux');
   }
 
   /**
-   * @covers ::create
+   * @covers                    ::create
+   * @expectedException         Conphig\Exceptions\ConfigurationException
+   * @expectedExceptionMessage  Invalid configuration type used
    * @test
-   * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Invalid configuration type used
    */
-  public function createWithInvalidTypeShouldFail( ) {
-    $factory = new ConfigurationFactory( 
-                                        FIXTURES_PATH .
-                                        DIRECTORY_SEPARATOR .
-                                        'foo.bar' );
-    $factory->create( );
+  public function createWithInvalidTypeShouldFail() {
+    $factory = new ConfigurationFactory(
+        FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.bar'
+    );
+    $factory->create();
   }
 
   /**
-   * @covers ::parseFullPath
+   * @covers                    ::parseFullPath
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionMethod::setAccessible
+   * @expectedException         Conphig\Exceptions\ConfigurationException
+   * @expectedExceptionMessage  Cannot parse empty path
    * @test
-   * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Cannot parse empty path
-   * @requires PHP 5.5.0
-   * @requires ReflectionMethod::setAccessible
    */
-  public function parseFullPathWithEmptyPathShouldFail( ) {
+  public function parseFullPathWithEmptyPathShouldFail() {
     $factory = new ConfigurationFactory;
-    $refl = new ReflectionClass( ConfigurationFactory::class )
-    ;
-    $method = $refl->getMethod( 'parseFullPath' );
-    $method->setAccessible( TRUE );
-    $method->invoke( $factory, '' );
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $method = $refl->getMethod('_parseFullPath');
+    $method->setAccessible(true);
+    $method->invoke($factory, '');
   }
 
   /**
-   * @covers ::parseFullPath
+   * @covers                    ::parseFullPath
+   * @expectedException         Conphig\Exceptions\ConfigurationException
+   * @expectedExceptionMessage  Cannot parse empty path
+   * @requires                  PHP 5.5.0
+   * @requires                  ReflectionMethod::setAccessible
    * @test
-   * @expectedException Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage Cannot parse empty path
-   * @requires PHP 5.5.0
-   * @requires ReflectionMethod::setAccessible
    */
-  public function parseFullPathWithNullPathShouldFail( ) {
+  public function parseFullPathWithNullPathShouldFail() {
     $factory = new ConfigurationFactory;
-    $refl = new ReflectionClass( ConfigurationFactory::class );
-    $method = $refl->getMethod( 'parseFullPath' );
-    $method->setAccessible( TRUE );
-    $method->invoke( $factory, NULL );
+    $refl = new ReflectionClass(ConfigurationFactory::class);
+    $method = $refl->getMethod('_parseFullPath');
+    $method->setAccessible(true);
+    $method->invoke($factory, null);
   }
 
   /**
-   * @covers ::create
-   * @covers ::__construct
-   * @covers Conphig\Configurators\AbstractConfigurator::__construct
-   * @covers Conphig\Configurators\IniConfigurator::parseConfig
-   * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
-   * @covers Conphig\Helpers\ConfiguratorHelper::createObjFromArray
+   * @covers                    ::create
+   * @covers                    ::__construct
+   * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
+   * @covers                    Conphig\Configurators\IniConfigurator::parseConfig
+   * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
+   * @covers                    Conphig\Helpers\ConfiguratorHelper::createObjFromArray
+   * @requires                  PHP 5.5.0
    * @test
-   * @requires PHP 5.5.0
    */
-  public function newConfigurationFromIniShouldWork( ) {
-    $factory = new ConfigurationFactory( FIXTURES_PATH );
-    $config = $factory->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+  public function newConfigurationFromIniShouldWork() {
+    $factory = new ConfigurationFactory(FIXTURES_PATH);
+    $config = $factory->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
     
     $factory = new ConfigurationFactory;
-    $config = $factory->create( FIXTURES_PATH );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+    $config = $factory->create(FIXTURES_PATH);
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
     
     $factory = new ConfigurationFactory;
-    $config = $factory->setConfigPath( FIXTURES_PATH )->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+    $config = $factory->setConfigPath(FIXTURES_PATH)->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
   }
 
   /**
-   * @covers ::create
-   * @covers ::__construct
-   * @covers Conphig\Configurators\IniConfigurator::parseConfig
-   * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
-   * @covers Conphig\Helpers\ConfiguratorHelper::createObjFromArray
-   * @covers Conphig\Configurators\AbstractConfigurator::__construct
+   * @covers                    ::create
+   * @covers                    ::__construct
+   * @covers                    Conphig\Configurators\IniConfigurator::parseConfig
+   * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
+   * @covers                    Conphig\Helpers\ConfiguratorHelper::createObjFromArray
+   * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
+   * @requires                  PHP 5.5.0
    * @test
-   * @requires PHP 5.5.0
    */
-  public function newConfigurationFromAnotherIniShouldWork( ) {
+  public function newConfigurationFromAnotherIniShouldWork() {
     $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.ini';
-    $factory = new ConfigurationFactory( $path );
-    $config = $factory->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->logging );
-    $this->assertEquals( $config->logging->engine, 'Monolog' );
+    $factory = new ConfigurationFactory($path);
+    $config = $factory->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->logging);
+    $this->assertEquals($config->logging->engine, 'Monolog');
     
     $factory = new ConfigurationFactory;
-    $config = $factory->create( $path );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->logging );
-    $this->assertEquals( $config->logging->engine, 'Monolog' );
+    $config = $factory->create($path);
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->logging);
+    $this->assertEquals($config->logging->engine, 'Monolog');
     
     $factory = new ConfigurationFactory;
-    $config = $factory->setConfigPath( $path )->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->logging );
-    $this->assertEquals( $config->logging->engine, 'Monolog' );
+    $config = $factory->setConfigPath($path)->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->logging);
+    $this->assertEquals($config->logging->engine, 'Monolog');
     
-    $factory = new ConfigurationFactory( FIXTURES_PATH );
-    $config = $factory->setConfigFileName( 'foo' )->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->logging );
-    $this->assertEquals( $config->logging->engine, 'Monolog' );
+    $factory = new ConfigurationFactory(FIXTURES_PATH);
+    $config = $factory->setConfigFileName('foo')->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->logging);
+    $this->assertEquals($config->logging->engine, 'Monolog');
   }
 
   /**
-   * @covers ::create
-   * @covers ::__construct
+   * @covers                    ::create
+   * @covers                    ::__construct
+   * @covers                    Conphig\Configurators\XmlConfigurator::parseConfig
+   * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
+   * @covers                    Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
+   * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
+   * @requires                  PHP 5.5.0
    * @test
-   * @covers Conphig\Configurators\XmlConfigurator::parseConfig
-   * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
-   * @covers Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
-   * @covers Conphig\Configurators\AbstractConfigurator::__construct
-   * @requires PHP 5.5.0
    */
-  public function newConfigurationFromXmlShouldWork( ) {
+  public function newConfigurationFromXmlShouldWork() {
     $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'config.xml';
-    $factory = new ConfigurationFactory( $path );
-    $config = $factory->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+    $factory = new ConfigurationFactory($path);
+    $config = $factory->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
     
-    $factory = new ConfigurationFactory( FIXTURES_PATH );
-    $config = $factory->setConfigType( 'xml' )->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+    $factory = new ConfigurationFactory(FIXTURES_PATH);
+    $config = $factory->setConfigType('xml')->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
     
-    $factory = new ConfigurationFactory( );
-    $config = $factory->create( $path );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+    $factory = new ConfigurationFactory;
+    $config = $factory->create($path);
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
   }
 
   /**
-   * @covers ::create
-   * @covers ::__construct
-   * @covers Conphig\Configurators\XmlConfigurator::parseConfig
-   * @covers Conphig\Configurators\AbstractConfigurator::getConfiguration
-   * @covers Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
-   * @covers Conphig\Configurators\AbstractConfigurator::__construct
+   * @covers                    ::create
+   * @covers                    ::__construct
+   * @covers                    Conphig\Configurators\XmlConfigurator::parseConfig
+   * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
+   * @covers                    Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
+   * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
+   * @requires                  PHP 5.5.0
    * @test
-   * @requires PHP 5.5.0
    */
-  public function newConfigurationFromAnotherXmlShouldWork( ) {
+  public function newConfigurationFromAnotherXmlShouldWork() {
     $path = FIXTURES_PATH . DIRECTORY_SEPARATOR . 'foo.xml';
-    $factory = new ConfigurationFactory( $path );
-    $config = $factory->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+    $factory = new ConfigurationFactory($path);
+    $config = $factory->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
     
-    $factory = new ConfigurationFactory( FIXTURES_PATH );
-    $config = $factory->setConfigFileName( 'foo' )->setConfigType( 'xml' )->create( );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+    $factory = new ConfigurationFactory(FIXTURES_PATH);
+    $config = $factory->setConfigFileName('foo')->setConfigType('xml')->create();
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
     
     $factory = new ConfigurationFactory;
-    $config = $factory->create( $path );
-    $this->assertInstanceOf( Configuration::class, $config );
-    $this->assertNotEmpty( $config->database );
-    $this->assertEquals( $config->database->engine, 'mysql' );
+    $config = $factory->create($path);
+    $this->assertInstanceOf(Configuration::class, $config);
+    $this->assertNotEmpty($config->database);
+    $this->assertEquals($config->database->engine, 'mysql');
   }
 }

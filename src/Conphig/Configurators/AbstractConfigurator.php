@@ -2,9 +2,9 @@
 
 /**
  *
- * @author Ashwin Mukhija
- * @license MIT
- * @link https://github.com/Achrome/Conphig
+ * @author    Ashwin Mukhija
+ * @license   MIT
+ * @link      https://github.com/Achrome/Conphig
  */
 namespace Conphig\Configurators;
 
@@ -14,34 +14,34 @@ abstract class AbstractConfigurator implements Configurable {
 
   /**
    *
-   * @var string
+   * @var   string
    */
-  protected $filePath;
+  protected $_filePath;
 
   /**
    *
-   * @var Configuration
+   * @var   Configuration
    */
-  protected $configuration;
+  protected $_configuration;
 
   /**
    *
-   * @var mixed
+   * @var   mixed
    */
-  protected $intermediateConf;
+  protected $_intermediateConf;
 
   /**
    *
-   * @var array
+   * @var   array
    */
-  protected $extraParams;
+  protected $_extraParams;
 
   public function __construct($filePath, $extraParams = []) {
-    $this->filePath = $filePath;
-    $this->extraParams = $extraParams;
+    $this->_filePath = $filePath;
+    $this->_extraParams = $extraParams;
   }
 
   public function getConfiguration() {
-    return $this->configuration;
+    return $this->_configuration;
   }
 }

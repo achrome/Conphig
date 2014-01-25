@@ -20,19 +20,19 @@ class ConfigurationFactory {
    *
    * @var string
    */
-  private $configPath;
+  private $_configPath;
 
   /**
    *
    * @var string
    */
-  private $configType = 'ini';
+  private $_configType = 'ini';
 
   /**
    *
    * @var array
    */
-  private $supportedTypes = [ 
+  private $_supportedTypes = [ 
       'ini' => 'Conphig\\Configurators\\IniConfigurator', 
       'xml' => 'Conphig\\Configurators\\XmlConfigurator', 
       'json' => 'Conphig\\Configurators\\JsonConfigurator'
@@ -42,13 +42,13 @@ class ConfigurationFactory {
    *
    * @var string
    */
-  private $configFileName = 'config';
+  private $_configFileName = 'config';
 
   /**
    *
    * @var array
    */
-  private $configParams = [];
+  private $_configParams = [];
 
   public function __construct($configPath = '') {
     if (!is_string($configPath)) {
@@ -61,22 +61,22 @@ class ConfigurationFactory {
   }
 
   public function setConfigPath($configPath) {
-    $this->configPath = $configPath;
+    $this->_configPath = $configPath;
     return $this;
   }
 
   public function setConfigType($configType) {
-    $this->configType = $configType;
+    $this->_configType = $configType;
     return $this;
   }
 
   public function setConfigFileName($fileName) {
-    $this->configFileName = $fileName;
+    $this->_configFileName = $fileName;
     return $this;
   }
 
   public function setConfigParams($configParams) {
-    $this->configParams = $configParams;
+    $this->_configParams = $configParams;
     return $this;
   }
 
@@ -93,14 +93,14 @@ class ConfigurationFactory {
       );
     }
     
-    $this->supportedTypes[$configType] = $configClass;
-    $this->configType = $configType;
+    $this->_supportedTypes[$configType] = $configClass;
+    $this->_configType = $configType;
     
     return $this;
   }
 
   public function getSupportedTypes() {
-    return $this->supportedTypes;
+    return $this->_supportedTypes;
   }
 
   /**
@@ -109,16 +109,16 @@ class ConfigurationFactory {
    */
   public function create($fullPath = '') {
     if ($fullPath !== '') {
-      $this->parseFullPath($fullPath);
-    } else if ($this->configPath !== '') {
-      $this->parseFullPath($this->configPath);
+      $this->_parseFullPath($fullPath);
+    } else if ($this->_configPath !== '') {
+      $this->_parseFullPath($this->_configPath);
     } else {
-      $this->configPath = getcwd();
+      $this->_configPath = getcwd();
     }
     
     $filePath = 
-        $this->configPath . DIRECTORY_SEPARATOR . $this->configFileName .
-        '.' . $this->configType;
+        $this->_configPath . DIRECTORY_SEPARATOR . $this->_configFileName .
+        '.' . $this->_configType;
     
     if (!file_exists($filePath)) {
       throw new ConfigurationException(
@@ -126,22 +126,22 @@ class ConfigurationFactory {
       );
     }
     
-    if (!array_key_exists($this->configType, $this->supportedTypes)) {
+    if (!array_key_exists($this->_configType, $this->_supportedTypes)) {
       throw new ConfigurationException(
           "Invalid configuration type used"
       );
     }
     
     $reflectionClass = 
-        new ReflectionClass($this->supportedTypes[$this->configType]);
+        new ReflectionClass($this->_supportedTypes[$this->_configType]);
     $configurator = 
-        $reflectionClass->newInstanceArgs([$filePath, $this->configParams]);
+        $reflectionClass->newInstanceArgs([$filePath, $this->_configParams]);
     $configurator->parseConfig();
     
     return $configurator->getConfiguration();
   }
 
-  protected function parseFullPath($path) {
+  protected function _parseFullPath($path) {
     if (empty($path)) {
       throw new ConfigurationException(
           "Cannot parse empty paths"
@@ -158,10 +158,10 @@ class ConfigurationFactory {
       unset($tokens[$ctokens - 1]);
     }
     
-    $this->configPath = implode(DIRECTORY_SEPARATOR, $tokens);
+    $this->_configPath = implode(DIRECTORY_SEPARATOR, $tokens);
     if (isset($name) && $name !== '' && isset($ext) && $ext !== null) {
-      $this->configFileName = $name;
-      $this->configType = $ext;
+      $this->_configFileName = $name;
+      $this->_configType = $ext;
     }
   }
 }
