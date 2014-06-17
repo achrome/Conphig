@@ -50,7 +50,6 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::__construct
-   * @requires                  ReflectionProperty::setAccessible
    * @test
    */
   public function newInstanceShouldCorrectlySetPrivateVars() {

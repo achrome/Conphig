@@ -6,8 +6,6 @@ The idea behind it is to standardize configuration objects and allowing you to m
 Currently the only supported file types are INI, XML and JSON. YAML support can be added through custom configuration
 
 [![Build Status](https://travis-ci.org/Achrome/Conphig.png?branch=master)](https://travis-ci.org/Achrome/Conphig)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Achrome/Conphig/badges/quality-score.png?s=83ddcfbe88648c2859974477530b405e7c3e8b3e)](https://scrutinizer-ci.com/g/Achrome/Conphig/)
-[![Code Coverage](https://scrutinizer-ci.com/g/Achrome/Conphig/badges/coverage.png?s=db57a0f44ccff108b0b3f61c134c4fdb02f4c2dd)](https://scrutinizer-ci.com/g/Achrome/Conphig/)
 
 ### Installation
 
