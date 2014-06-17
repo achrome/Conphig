@@ -8,8 +8,7 @@
  */
 namespace Conphig\Interfaces;
 
-interface Configurable {
-
-  public function parseConfig();
-  
+interface Configurable
+{
+    public function parseConfig();
 }

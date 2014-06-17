@@ -10,4 +10,6 @@ namespace Conphig\Exceptions;
 
 use \Exception;
 
-class ConfigurationException extends Exception {}
+class ConfigurationException extends Exception
+{
+}

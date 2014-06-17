@@ -10,38 +10,41 @@ namespace Conphig\Configurators;
 
 use Conphig\Interfaces\Configurable;
 
-abstract class AbstractConfigurator implements Configurable {
+abstract class AbstractConfigurator implements Configurable
+{
 
-  /**
-   *
-   * @var   string
-   */
-  protected $_filePath;
+    /**
+     *
+     * @var   string
+     */
+    protected $filePath;
 
-  /**
-   *
-   * @var   Configuration
-   */
-  protected $_configuration;
+    /**
+     *
+     * @var   Configuration
+     */
+    protected $configuration;
 
-  /**
-   *
-   * @var   mixed
-   */
-  protected $_intermediateConf;
+    /**
+     *
+     * @var   mixed
+     */
+    protected $intermediateConf;
 
-  /**
-   *
-   * @var   array
-   */
-  protected $_extraParams;
+    /**
+     *
+     * @var   array
+     */
+    protected $extraParams;
 
-  public function __construct($filePath, $extraParams = []) {
-    $this->_filePath = $filePath;
-    $this->_extraParams = $extraParams;
-  }
+    public function __construct($filePath, $extraParams = [])
+    {
+        $this->filePath = $filePath;
+        $this->extraParams = $extraParams;
+    }
 
-  public function getConfiguration() {
-    return $this->_configuration;
-  }
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
 }

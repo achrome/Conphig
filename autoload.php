@@ -10,20 +10,22 @@
  * including classes from the sub-namespaces
  */
 
+define('DS', DIRECTORY_SEPARATOR);
+
 spl_autoload_register(function($className) {
   // Only load the class under the Conphig
-  if(strpos($className, 'Conphig\\') !== 0) { 
+  if(strpos($className, "Conphig\\") !== 0) { 
     return false;
   }
 	
   // Compute the file path and make it OS agnostic
-  $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
-  $fileName = __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . "$className.php";
+  $className = str_replace("\\", DS, $className);
+  $fileName = __DIR__ . DS . 'src' . DS . "$className.php";
   
   // Add a safety check to avoid unforeseen errors
   if(file_exists($fileName)) {
     require $fileName;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 });

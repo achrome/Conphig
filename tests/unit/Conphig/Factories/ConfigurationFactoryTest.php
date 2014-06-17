@@ -41,28 +41,26 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::__construct
-   * @requires                  PHP 5.5.0
    * @test
    */
-  public function newInstanceWithoutArgsShouldPass( ) {
+  public function newInstanceWithoutArgsShouldPass() {
     $factory = new ConfigurationFactory;
-    $this->assertInstanceOf( ConfigurationFactory::class, $factory );
+    $this->assertInstanceOf(ConfigurationFactory::class, $factory);
   }
 
   /**
    * @covers                    ::__construct
-   * @requires                  PHP 5.5.0
    * @requires                  ReflectionProperty::setAccessible
    * @test
    */
-  public function newInstanceShouldCorrectlySetPrivateVars( ) {
+  public function newInstanceShouldCorrectlySetPrivateVars() {
     $factory = new ConfigurationFactory(__DIR__);
     $refl = new ReflectionClass(ConfigurationFactory::class);
     
-    $rConfigPath = $refl->getProperty('_configPath');
-    $rConfigFileName = $refl->getProperty('_configFileName');
-    $rConfigType = $refl->getProperty('_configType');
-    $rConfigParams = $refl->getProperty('_configParams');
+    $rConfigPath = $refl->getProperty('configPath');
+    $rConfigFileName = $refl->getProperty('configFileName');
+    $rConfigType = $refl->getProperty('configType');
+    $rConfigParams = $refl->getProperty('configParams');
     
     $rConfigFileName->setAccessible(true);
     $rConfigPath->setAccessible(true);
@@ -84,10 +82,9 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
    * @covers                    ::setConfigType
    * @covers                    ::setConfigPath
    * @covers                    ::setConfigParams
-   * @requires                  PHP 5.5.0
    * @test
    */
-  public function mutatorFunctionsShouldNotChangeTypeOfFactory( ) {
+  public function mutatorFunctionsShouldNotChangeTypeOfFactory() {
     $factory = new ConfigurationFactory;
     $test = $factory->setConfigFileName('foo');
     $this->assertEquals($test, $factory);
@@ -108,7 +105,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
-   * @covers                    ::_assignCorrectPath
+   * @covers                    ::assignCorrectPath
    * @expectedException         Conphig\Exceptions\ConfigurationException
    * @expectedExceptionMessage  Unable to find file at foobar
    * @test
@@ -120,8 +117,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
-   * @covers                    ::_assignCorrectPath
-   * @requires                  PHP 5.5.0
+   * @covers                    ::assignCorrectPath
    * @test
    */
   public function creationWithValidPathShouldPass() {
@@ -144,7 +140,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   /**
    * @covers                    ::registerConfigHandler
    * @expectedException         Conphig\Exceptions\ConfigurationException
-   * @expectedExceptionMessage  Class stdClass does not extend AbstractConfigurator
+   * @expectedExceptionMessage  Class stdClass does not extend Conphig\Configurators\AbstractConfigurator
    * @test
    */
   public function registerInvalidHandlerShouldFail() {
@@ -154,8 +150,6 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   
   /**
    * @covers                    ::registerConfigHandler
-   * @requires                  PHP 5.5.0
-   * @requires                  ReflectionProperty::setAccessible
    * @test
    */
   public function registerValidHandlerShouldPass() {
@@ -167,7 +161,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($factory->getSupportedTypes()['foo'], 'FooConfigurator');
     
     $refl = new ReflectionClass(ConfigurationFactory::class);
-    $rConfigType = $refl->getProperty('_configType');
+    $rConfigType = $refl->getProperty('configType');
     $rConfigType->setAccessible(true);
     $value = $rConfigType->getValue($factory);
     $this->assertEquals($value, 'foo');
@@ -175,14 +169,12 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::setConfigPath
-   * @requires                  PHP 5.5.0
-   * @requires                  ReflectionProperty::setAccessible
    * @test
    */
   public function privateConfigPathShouldBeCorrectlySet() {
     $factory = new ConfigurationFactory;
     $refl = new ReflectionClass(ConfigurationFactory::class);
-    $prop = $refl->getProperty('_configPath');
+    $prop = $refl->getProperty('configPath');
     $prop->setAccessible(true);
     
     $val = $prop->getValue($factory);
@@ -195,14 +187,12 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::setConfigType
-   * @requires                  PHP 5.5.0
-   * @requires                  ReflectionProperty::setAccessible
    * @test
    */
   public function privateConfigTypeShouldBeCorrectlySet() {
     $factory = new ConfigurationFactory;
     $refl = new ReflectionClass(ConfigurationFactory::class);
-    $prop = $refl->getProperty('_configType');
+    $prop = $refl->getProperty('configType');
     $prop->setAccessible(true);
     $val = $prop->getValue($factory);
     $this->assertEquals($val, 'ini');
@@ -214,14 +204,12 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                      ::setConfigFileName
-   * @requires                    PHP 5.5.0
-   * @requires                    ReflectionProperty::setAccessible
    * @test
    */
   public function privateConfigFileNameShouldBeCorrectlySet() {
     $factory = new ConfigurationFactory;
     $refl = new ReflectionClass(ConfigurationFactory::class);
-    $prop = $refl->getProperty('_configFileName');
+    $prop = $refl->getProperty('configFileName');
     $prop->setAccessible(true);
     $val = $prop->getValue($factory);
     $this->assertEquals($val, 'config');
@@ -233,14 +221,12 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::setConfigParams
-   * @requires                  PHP 5.5.0
-   * @requires                  ReflectionProperty::setAccessible
    * @test
    */
   public function privateConfigParamsShouldBeCorrectlySet() {
     $factory = new ConfigurationFactory;
     $refl = new ReflectionClass(ConfigurationFactory::class);
-    $prop = $refl->getProperty('_configParams');
+    $prop = $refl->getProperty('configParams');
     $prop->setAccessible(true);
     $val = $prop->getValue($factory);
     $this->assertEquals($val, []);
@@ -252,23 +238,21 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * @covers                    ::_parseFullPath
-   * @requires                  PHP 5.5.0
-   * @requires                  ReflectionMethod::setAccessible
+   * @covers                    ::parseFullPath
    * @test
    */
   public function protectedParseFullPathShouldWork() {
     $factory = new ConfigurationFactory;
     $refl = new ReflectionClass(ConfigurationFactory::class);
     
-    $rConfigType = $refl->getProperty('_configType');
-    $rConfigPath = $refl->getProperty('_configPath');
-    $rConfigFileName = $refl->getProperty('_configFileName');
+    $rConfigType = $refl->getProperty('configType');
+    $rConfigPath = $refl->getProperty('configPath');
+    $rConfigFileName = $refl->getProperty('configFileName');
     
     $rConfigType->setAccessible(true);
     $rConfigPath->setAccessible(true);
     $rConfigFileName->setAccessible(true);
-    $method = $refl->getMethod('_parseFullPath');
+    $method = $refl->getMethod('parseFullPath');
     $method->setAccessible(true);
     
     $path = DIRECTORY_SEPARATOR . 'foo' . DIRECTORY_SEPARATOR . 'bar';
@@ -286,7 +270,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
-   * @covers                    ::_assignCorrectPath
+   * @covers                    ::assignCorrectPath
    * @expectedException         Conphig\Exceptions\ConfigurationException
    * @expectedExceptionMessage  Invalid configuration type used
    * @test
@@ -299,9 +283,7 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * @covers                    ::_parseFullPath
-   * @requires                  PHP 5.5.0
-   * @requires                  ReflectionMethod::setAccessible
+   * @covers                    ::parseFullPath
    * @expectedException         Conphig\Exceptions\ConfigurationException
    * @expectedExceptionMessage  Cannot parse empty path
    * @test
@@ -309,23 +291,21 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   public function parseFullPathWithEmptyPathShouldFail() {
     $factory = new ConfigurationFactory;
     $refl = new ReflectionClass(ConfigurationFactory::class);
-    $method = $refl->getMethod('_parseFullPath');
+    $method = $refl->getMethod('parseFullPath');
     $method->setAccessible(true);
     $method->invoke($factory, '');
   }
 
   /**
-   * @covers                    ::_parseFullPath
+   * @covers                    ::parseFullPath
    * @expectedException         Conphig\Exceptions\ConfigurationException
    * @expectedExceptionMessage  Cannot parse empty path
-   * @requires                  PHP 5.5.0
-   * @requires                  ReflectionMethod::setAccessible
    * @test
    */
   public function parseFullPathWithNullPathShouldFail() {
     $factory = new ConfigurationFactory;
     $refl = new ReflectionClass(ConfigurationFactory::class);
-    $method = $refl->getMethod('_parseFullPath');
+    $method = $refl->getMethod('parseFullPath');
     $method->setAccessible(true);
     $method->invoke($factory, null);
   }
@@ -333,12 +313,11 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   /**
    * @covers                    ::create
    * @covers                    ::__construct
-   * @covers                    ::_assignCorrectPath
+   * @covers                    ::assignCorrectPath
    * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
    * @covers                    Conphig\Configurators\IniConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
    * @covers                    Conphig\Helpers\ConfiguratorHelper::createObjFromArray
-   * @requires                  PHP 5.5.0
    * @test
    */
   public function newConfigurationFromIniShouldWork() {
@@ -363,13 +342,12 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
-   * @covers                    ::_assignCorrectPath
+   * @covers                    ::assignCorrectPath
    * @covers                    ::__construct
    * @covers                    Conphig\Configurators\IniConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
    * @covers                    Conphig\Helpers\ConfiguratorHelper::createObjFromArray
    * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
-   * @requires                  PHP 5.5.0
    * @test
    */
   public function newConfigurationFromAnotherIniShouldWork() {
@@ -401,13 +379,12 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
-   * @covers                    ::_assignCorrectPath
+   * @covers                    ::assignCorrectPath
    * @covers                    ::__construct
    * @covers                    Conphig\Configurators\XmlConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
-   * @covers                    Conphig\Configurators\XmlConfigurator::_createConfigFromXmlElements
+   * @covers                    Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
    * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
-   * @requires                  PHP 5.5.0
    * @test
    */
   public function newConfigurationFromXmlShouldWork() {
@@ -433,11 +410,11 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
 
   /**
    * @covers                    ::create
-   * @covers                    ::_assignCorrectPath
+   * @covers                    ::assignCorrectPath
    * @covers                    ::__construct
    * @covers                    Conphig\Configurators\XmlConfigurator::parseConfig
    * @covers                    Conphig\Configurators\AbstractConfigurator::getConfiguration
-   * @covers                    Conphig\Configurators\XmlConfigurator::_createConfigFromXmlElements
+   * @covers                    Conphig\Configurators\XmlConfigurator::createConfigFromXmlElements
    * @covers                    Conphig\Configurators\AbstractConfigurator::__construct
    * @requires                  PHP 5.5.0
    * @test
@@ -464,19 +441,17 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase {
   }
   
   /**
-   * @covers                    ::_assignCorrectPath
-   * @requires                  PHP 5.5.0
-   * @requires                  ReflectionProperty::setAccessible
+   * @covers                    ::assignCorrectPath
    * @test
    */
   public function checkPathCreationWithNoGivenPath() {
     $refl = new ReflectionClass(ConfigurationFactory::class);
     $factory = $refl->newInstanceArgs([]);
-    $rAssignCorrectPath = $refl->getMethod('_assignCorrectPath');
+    $rAssignCorrectPath = $refl->getMethod('assignCorrectPath');
     $rAssignCorrectPath->setAccessible(true);
     $rAssignCorrectPath->invoke($factory);
     
-    $rConfigPath = $refl->getProperty('_configPath');
+    $rConfigPath = $refl->getProperty('configPath');
     $rConfigPath->setAccessible(true);
     
     $this->assertEquals($rConfigPath->getValue($factory), getcwd());

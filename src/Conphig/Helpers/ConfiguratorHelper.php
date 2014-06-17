@@ -12,38 +12,23 @@ use \InvalidArgumentException;
 use \ReflectionClass;
 use \Exception;
 
-class ConfiguratorHelper {
+class ConfiguratorHelper
+{
 
-  static public function 
-      createObjFromArray($inArray, 
-                         $objType = 'Conphig\\Configuration\\Configuration', 
-                         $objArgs = []) {
-    if (!is_array( $inArray)) {
-      throw new InvalidArgumentException(
-          "Expected an array, got a " . gettype($inArray)
-      );
+    const DEFAULT_OBJ_TYPE = 'Conphig\\Configuration\\Configuration';
+  
+    public function createObjFromArray($inArray)
+    {
+    
+        $outObj = (new ReflectionClass(self::DEFAULT_OBJ_TYPE))->newInstanceWithoutConstructor();
+    
+        foreach ($inArray as $key => $value) {
+            if (is_array($value)) {
+                $outObj->$key = $this->createObjFromArray($value);
+            } else {
+                $outObj->$key = $value;
+            }
+        }
+        return $outObj;
     }
-    
-    $reflector = new ReflectionClass($objType);
-    $outObj = 
-        method_exists($objType, '__construct') ? 
-        $reflector->newInstance($objArgs) : 
-        $reflector->newInstanceWithoutConstructor();
-    
-    if (!method_exists($outObj, '__set') ||
-        !method_exists($outObj, '__get')) {
-      throw new Exception(
-          "$objType does not implement methods __get and __set"
-      );
-    }
-    
-    foreach ($inArray as $key => $value) {
-      $outObj->$key = 
-          is_array($value) ? 
-          self::createObjFromArray($value, $objType, $objArgs) : 
-          $value;
-    }
-    
-    return $outObj;
-  }
 }
