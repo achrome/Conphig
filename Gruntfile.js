@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     },
     phpunit: {
       options: {
-        bin: 'vendor/bin/phpunit --coverage-html coverage',
+        bin: 'vendor/bin/phpunit --coverage-html coverage --coverage-clover build/logs/clover.xml',
         colors: true
       },
       classes: {
