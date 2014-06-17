@@ -26,13 +26,13 @@ Just add this to your `composer.json`
 Alternatively, you can use the composer CLI like this
 
 ```shell
-$ php composer.phar require achrome/conphig *
+$ php composer.phar require 'achrome/conphig=*'
 ```
 
 Or
 
 ```shell
-$ composer require achrome/conphig *
+$ composer require 'achrome/conphig=*'
 ```
 
 Then, in the application bootstrap, just `require 'vendor/autoload.php'`.
@@ -58,9 +58,9 @@ use Conphig\Factories\ConfigurationFactory;
 
 $configCreator = new ConfigurationFactory;
 $configuration = $configCreator->setConfigPath('/path/to/config/dir')
-					->setConfigFileName('configFileName')
-					->setConfigType('filetype')
-					->create();
+					       ->setConfigFileName('configFileName')
+					       ->setConfigType('filetype')
+					       ->create();
 ```
 
 Or, if you prefer to go through a simpler route
@@ -139,6 +139,7 @@ $configuration = $configCreator->registerConfigHandler('custom', 'Foo\\BarConfig
 
 ### Contributing
 Just add new features as you want and send out a pull request! If you see an issue, just open it in [issues](https://github.com/Achrome/Conphig/issues)
+**Note**: Please run `grunt` before committing to make sure code style and unit tests pass
 
 ### Contact
 [Github](https://github.com/Achrome)

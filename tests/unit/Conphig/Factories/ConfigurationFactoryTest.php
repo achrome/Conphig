@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * @author Ashwin Mukhija
- * @package Conphig
- *          The test file for ConfigurationFactory
+ * @author    Ashwin Mukhija
+ * @package   Conphig
+ *
  */
 use \PHPUnit_Framework_TestCase;
 use \ReflectionClass;

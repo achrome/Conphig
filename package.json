@@ -2,9 +2,12 @@
   "name": "Conphig",
   "version": "0.1.0",
   "description": "A simple PHP configurator",
-  "main": "None",
+  "main": "Gruntfile  .js",
   "directories": {
     "test": "tests"
+  },
+  "engines": {
+    "node": ">= 0.10.x"
   },
   "scripts": {
     "test": "None"
