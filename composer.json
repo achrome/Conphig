@@ -1,5 +1,5 @@
 {
-	"name": "achrome/conphig",
+    "name": "achrome/conphig",
 	"homepage": "http://github.com/Achrome/Conphig",
 	"description": "A simple PHP Configuration manager",
 	"license": "MIT",
@@ -8,11 +8,14 @@
 	    {
 	    	"name": "Ashwin Mukhija",
 	    	"email": "achromatic.rainbow@gmail.com",
-	    	"role": "Creator"
+	    	"role": "Author"
 	    }
 	],
 	"require": {
-		"php": ">=5.5.0"
+        "php": ">=5.5.0"
+	},
+	"require-dev": {
+	    "phpunit/phpunit": "*"
 	},
 	"autoload": {
 		"psr-0": {
